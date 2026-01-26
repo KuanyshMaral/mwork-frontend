@@ -1,0 +1,94 @@
+.payment-success {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    background: #ffffff;
+    padding: 40px;
+}
+
+.payment-success__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+}
+
+.payment-success__icon {
+    margin-bottom: 24px;
+}
+
+.payment-success__title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #10b981;
+    margin: 0 0 12px 0;
+}
+
+.payment-success__subtitle {
+    font-size: 18px;
+    font-weight: 400;
+    color: #6b7280;
+    margin: 0 0 32px 0;
+    line-height: 1.5;
+}
+
+.payment-success__payment-id {
+    font-size: 14px;
+    font-weight: 400;
+    color: #9ca3af;
+    margin: 0 0 32px 0;
+}
+
+.payment-success__button {
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    background: #3b82f6;
+    padding: 16px 32px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-bottom: 16px;
+}
+
+.payment-success__button:hover {
+    background: #2563eb;
+}
+
+.payment-success__button:active {
+    background: #1d4ed8;
+}
+
+.payment-success__auto-redirect {
+    font-size: 14px;
+    font-weight: 400;
+    color: #9ca3af;
+    margin: 0;
+}
+
+/* Responsive behavior for mobile */
+@media (max-width: 768px) {
+    .payment-success__icon svg {
+        width: 64px;
+        height: 64px;
+    }
+
+    .payment-success__title {
+        font-size: 24px;
+    }
+
+    .payment-success__subtitle {
+        font-size: 16px;
+    }
+
+    .payment-success__button {
+        font-size: 14px;
+        padding: 14px 28px;
+    }
+}
