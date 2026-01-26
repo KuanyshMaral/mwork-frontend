@@ -1,0 +1,161 @@
+/* Casting Detail Styles */
+
+.casting-detail {
+    max-width: 1000px;
+}
+
+.back-link {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.back-link:hover {
+    color: var(--primary);
+}
+
+.casting-content {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.casting-main {
+    min-width: 0;
+}
+
+/* Header Card */
+.casting-header-card {
+    position: relative;
+}
+
+.casting-header-card .badge {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+}
+
+.casting-header-card h1 {
+    font-size: 1.75rem;
+    margin-bottom: 16px;
+    padding-right: 80px;
+}
+
+.casting-meta {
+    display: flex;
+    gap: 20px;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+/* Description */
+.description-text {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
+/* Requirements */
+.requirements-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.req-item {
+    background: var(--bg-secondary);
+    padding: 16px;
+    border-radius: var(--radius-md);
+}
+
+.req-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.req-value {
+    font-weight: 600;
+}
+
+/* Sidebar */
+.casting-sidebar {
+    position: sticky;
+    top: 32px;
+    height: fit-content;
+}
+
+.apply-card {
+    text-align: center;
+}
+
+.pay-info {
+    margin-bottom: 24px;
+}
+
+.pay-label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.pay-amount {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--success);
+}
+
+.apply-card .btn {
+    width: 100%;
+}
+
+.apply-error {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #dc2626;
+    font-size: 0.875rem;
+}
+
+.apply-note {
+    margin-top: 12px;
+    color: #6b7280;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+}
+
+.btn-success {
+    background: #10b981 !important;
+    color: white !important;
+}
+
+/* Not Found */
+.not-found {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.not-found h2 {
+    margin-bottom: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .casting-content {
+        grid-template-columns: 1fr;
+    }
+
+    .casting-sidebar {
+        position: static;
+        order: -1;
+    }
+
+    .requirements-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,124 @@
+/* Castings Page Styles */
+
+.castings-page {
+    max-width: 1000px;
+}
+
+/* Filters */
+.filters-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.search-input {
+    flex: 1;
+}
+
+.filter-select {
+    width: 180px;
+}
+
+/* Castings Grid */
+.castings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.casting-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: var(--transition);
+    position: relative;
+}
+
+.casting-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.casting-card .badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+.casting-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.casting-header h3 {
+    font-size: 1.125rem;
+    margin-right: 16px;
+}
+
+.casting-pay {
+    color: var(--success);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.casting-description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+.casting-meta {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.casting-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+}
+
+.casting-date {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+
+/* No Results */
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .filters-bar {
+        flex-direction: column;
+    }
+
+    .filter-select {
+        width: 100%;
+    }
+
+    .castings-grid {
+        grid-template-columns: 1fr;
+    }
+}

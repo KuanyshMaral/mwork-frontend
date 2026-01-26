@@ -1,0 +1,149 @@
+/* Subscriptions Page Styles */
+
+.subscriptions-page {
+    max-width: 1000px;
+}
+
+/* Plans Grid */
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin: 40px 0;
+}
+
+.plan-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 32px;
+    position: relative;
+    transition: var(--transition);
+}
+
+.plan-card:hover {
+    border-color: var(--border-light);
+}
+
+.plan-card.popular {
+    border-color: var(--primary);
+    transform: scale(1.02);
+}
+
+.plan-card.current {
+    border-color: var(--success);
+}
+
+.popular-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.plan-name {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.plan-price {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.price-amount {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.price-period {
+    color: var(--text-secondary);
+}
+
+/* Features */
+.plan-features {
+    list-style: none;
+    margin-bottom: 32px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.feature-item:last-child {
+    border-bottom: none;
+}
+
+.feature-icon {
+    font-size: 0.875rem;
+}
+
+.feature-item.included .feature-icon {
+    color: var(--success);
+}
+
+.feature-item.not-included {
+    color: var(--text-muted);
+}
+
+.feature-item.not-included .feature-icon {
+    color: var(--text-muted);
+}
+
+.plan-btn {
+    width: 100%;
+}
+
+/* FAQ */
+.faq-section {
+    margin-top: 60px;
+}
+
+.faq-section h2 {
+    margin-bottom: 32px;
+}
+
+.faq-list {
+    display: grid;
+    gap: 20px;
+}
+
+.faq-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+}
+
+.faq-item h4 {
+    margin-bottom: 12px;
+}
+
+.faq-item p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .plans-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .plan-card.popular {
+        transform: none;
+    }
+}

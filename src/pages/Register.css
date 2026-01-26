@@ -1,0 +1,350 @@
+/* Register Page Styles - LIGHT THEME */
+
+/* Base Page - Light Background */
+.register-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: #fafafa;
+}
+
+.register-container {
+    width: 100%;
+    max-width: 950px;
+    text-align: center;
+}
+
+.register-title {
+    font-size: 2.75rem;
+    font-weight: 700;
+    color: #6366f1;
+    margin-bottom: 16px;
+}
+
+.register-subtitle {
+    color: #6b7280;
+    font-size: 1rem;
+    margin-bottom: 48px;
+    line-height: 1.6;
+}
+
+.register-subtitle .highlight {
+    color: #6366f1;
+}
+
+/* Role Cards - White on Light Gray */
+.role-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.role-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 32px 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.role-card:hover {
+    border-color: #6366f1;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.12);
+}
+
+.role-card.employer:hover {
+    border-color: #8b5cf6;
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.12);
+}
+
+.role-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.role-card h3 {
+    font-size: 1.25rem;
+    color: #111827;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.role-description {
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.role-features {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 24px;
+    padding: 0;
+}
+
+.role-features li {
+    padding: 6px 0;
+    color: #6b7280;
+    font-size: 0.85rem;
+    position: relative;
+    padding-left: 16px;
+}
+
+.role-features li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #6366f1;
+}
+
+.role-btn {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.role-card .btn-primary {
+    background: #6366f1;
+    border: none;
+    color: white;
+}
+
+.role-card .btn-primary:hover {
+    background: #4f46e5;
+}
+
+.role-card .btn-outline {
+    background: transparent;
+    border: 1px solid #6366f1;
+    color: #6366f1;
+}
+
+.role-card .btn-outline:hover {
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.role-card.employer .btn-primary {
+    background: #8b5cf6;
+}
+
+.role-card.employer .btn-primary:hover {
+    background: #7c3aed;
+}
+
+.role-card.employer .btn-outline {
+    border-color: #8b5cf6;
+    color: #8b5cf6;
+}
+
+/* Form Pages */
+.register-form-container {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #374151;
+    font-size: 0.95rem;
+    cursor: pointer;
+    margin-bottom: 24px;
+    padding: 8px 0;
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    color: #6366f1;
+}
+
+.register-form-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 48px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.form-header-icon {
+    width: 44px;
+    height: 44px;
+    background: #f3f4f6;
+    color: #6b7280;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+
+.register-form-card h2 {
+    color: #111827;
+    margin-bottom: 8px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.form-subtitle {
+    color: #6b7280;
+    text-align: center;
+    margin-bottom: 32px;
+    font-size: 0.9rem;
+}
+
+.form-subtitle a {
+    color: #6366f1;
+}
+
+/* Form Inputs */
+.register-page .form-group {
+    margin-bottom: 20px;
+}
+
+.register-page .form-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.register-page .form-input {
+    width: 100%;
+    padding: 12px 14px;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    color: #1f2937;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.register-page .form-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.register-page .form-input::placeholder {
+    color: #9ca3af;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.form-error {
+    background: #fef2f2;
+    color: #dc2626;
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.875rem;
+    border: 1px solid #fecaca;
+}
+
+/* Info boxes */
+.info-box {
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.info-box.warning {
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+    color: #92400e;
+}
+
+.info-box.info {
+    background: #eff6ff;
+    border: 1px solid #93c5fd;
+    color: #1e40af;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 14px 24px;
+    margin-top: 8px;
+    font-size: 0.95rem;
+    background: #6366f1;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.submit-btn:hover {
+    background: #4f46e5;
+}
+
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.form-footer p {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.form-footer a {
+    color: #6366f1;
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .role-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .register-form-card {
+        padding: 32px 24px;
+    }
+
+    .register-title {
+        font-size: 2.25rem;
+    }
+}
