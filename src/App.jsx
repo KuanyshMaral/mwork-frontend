@@ -21,6 +21,9 @@ import Subscriptions from './pages/Subscriptions'
 import Photostudios from './pages/Photostudios'
 import Advertising from './pages/Advertising'
 import Chat from './pages/Chat'
+import PaymentSuccess from './pages/PaymentSuccess'
+import PaymentFailed from './pages/PaymentFailed'
+import PaymentRedirect from './components/payment/PaymentRedirect'
 
 // Layout
 import Layout from './components/layout/Layout'
@@ -85,6 +88,9 @@ function AppRoutes() {
                     <Route path="/verify-email" element={<ProtectedRoute><VerifyEmail /></ProtectedRoute>} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route path="/payment/redirect" element={<PaymentRedirect paymentUrl="https://kaspi.kz/payment/test" amount={4990} />} />
+                    <Route path="/payment/success" element={<PaymentSuccess />} />
+                    <Route path="/payment/failed" element={<PaymentFailed />} />
 
                     {/* Protected routes with Layout */}
                     <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>

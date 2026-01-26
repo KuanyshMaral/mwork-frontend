@@ -1,0 +1,104 @@
+.payment-failed {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    background: #ffffff;
+    padding: 40px;
+}
+
+.payment-failed__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+}
+
+.payment-failed__icon {
+    margin-bottom: 24px;
+}
+
+.payment-failed__title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #ef4444;
+    margin: 0 0 12px 0;
+}
+
+.payment-failed__subtitle {
+    font-size: 18px;
+    font-weight: 400;
+    color: #6b7280;
+    margin: 0 0 32px 0;
+    line-height: 1.6;
+}
+
+.payment-failed__error {
+    font-size: 14px;
+    font-weight: 400;
+    color: #9ca3af;
+    margin: 0 0 32px 0;
+}
+
+.payment-failed__button {
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 16px 32px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-bottom: 12px;
+}
+
+.payment-failed__button--primary {
+    color: #ffffff;
+    background: #3b82f6;
+    margin-top: 32px;
+}
+
+.payment-failed__button--primary:hover {
+    background: #2563eb;
+}
+
+.payment-failed__button--primary:active {
+    background: #1d4ed8;
+}
+
+.payment-failed__button--secondary {
+    color: #374151;
+    background: #e5e7eb;
+}
+
+.payment-failed__button--secondary:hover {
+    background: #d1d5db;
+}
+
+.payment-failed__button--secondary:active {
+    background: #9ca3af;
+}
+
+/* Responsive behavior for mobile */
+@media (max-width: 768px) {
+    .payment-failed__icon svg {
+        width: 64px;
+        height: 64px;
+    }
+
+    .payment-failed__title {
+        font-size: 24px;
+    }
+
+    .payment-failed__subtitle {
+        font-size: 16px;
+    }
+
+    .payment-failed__button {
+        font-size: 14px;
+        padding: 14px 28px;
+    }
+}
