@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth.jsx'
 import { dashboardApi, castingApi, responseApi, chatApi } from '../api/client'
+import SubscriptionLimits from '../components/subscription/SubscriptionLimits.jsx'
 import './Dashboard.css'
 
 export default function Dashboard() {
@@ -187,6 +188,9 @@ export default function Dashboard() {
                     </div>
                 )}
             </section>
+
+            {/* Subscription Limits */}
+            <SubscriptionLimits />
 
             {/* Responses Alert */}
             <div className="responses-alert">

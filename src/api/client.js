@@ -104,16 +104,47 @@ export const dashboardApi = {
 export const subscriptionApi = {
     getPlans: () => api.get('/subscriptions/plans'),
     getCurrent: () => api.get('/subscriptions/current'),
-    subscribe: (data) => api.post('/subscriptions', data),
+    getPlanById: (id) => api.get(`/subscriptions/plans/${id}`),
+    
+    // Updated to match new requirements
+    subscribe: async (planId, billingPeriod) => {
+        try {
+            return await api.post('/subscriptions/subscribe', { 
+                plan_id: planId, 
+                billing_period: billingPeriod 
+            });
+        } catch (error) {
+            if (error.status === 409) {
+                throw new Error('Already subscribed');
+            }
+            throw error;
+        }
+    },
+    
     cancel: (reason) => api.post('/subscriptions/cancel', { reason }),
+    
+    // New method
+    getLimits: () => api.get('/subscriptions/limits'),
+}
+
+// Promotion API (New namespace)
+export const promotionApi = {
+    create: (data) => api.post('/promotions', data),
+    activate: (id) => api.post(`/promotions/${id}/activate`),
+    pause: (id) => api.post(`/promotions/${id}/pause`),
+    getStats: (id) => api.get(`/promotions/${id}/stats`),
 }
 
 // Reviews methods
 export const reviewApi = {
+    // Existing flexible method
     getByProfile: (id, params) => {
         const queryString = new URLSearchParams(params).toString()
         return api.get(`/profiles/${id}/reviews${queryString ? `?${queryString}` : ''}`)
     },
+    // New specific method requested
+    listByProfile: (profileId, page = 1) => api.get(`/profiles/${profileId}/reviews?page=${page}`),
+    
     getSummary: (id) => api.get(`/profiles/${id}/reviews/summary`),
     create: (data) => api.post('/reviews', data),
     delete: (id) => api.delete(`/reviews/${id}`),
@@ -173,6 +204,11 @@ export const responseApi = {
     // Update response status (as employer)
     updateStatus: (responseId, status) =>
         api.patch(`/responses/${responseId}/status`, { status }),
+}
+
+// Admin API methods
+export const adminApi = {
+    getStats: () => api.get('/admin/stats'),
 }
 
 export default api

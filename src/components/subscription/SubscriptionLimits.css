@@ -1,0 +1,145 @@
+.subscription-limits {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 24px;
+    gap: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+    max-width: 600px;
+}
+
+.subscription-limits__title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 16px 0;
+}
+
+.subscription-limits__item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.subscription-limits__label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.subscription-limits__count {
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.subscription-limits__warning {
+    color: #ef4444;
+    font-size: 14px;
+}
+
+.subscription-limits__progress-container {
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.subscription-limits__progress-bar {
+    height: 8px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.subscription-limits__progress-bar--over {
+    background: #ef4444;
+}
+
+.subscription-limits__percentage {
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-left: 8px;
+    align-self: flex-end;
+}
+
+/* Loading skeleton */
+.subscription-limits__skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.subscription-limits__skeleton-header {
+    height: 24px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    width: 120px;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.subscription-limits__skeleton-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.subscription-limits__skeleton-label {
+    height: 16px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    width: 200px;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.subscription-limits__skeleton-bar {
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Error state */
+.subscription-limits__error {
+    color: #ef4444;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    padding: 24px;
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+    .subscription-limits {
+        max-width: 100%;
+        padding: 16px;
+    }
+    
+    .subscription-limits__title {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+    
+    .subscription-limits__label {
+        font-size: 14px;
+    }
+    
+    .subscription-limits__count {
+        font-size: 14px;
+    }
+}

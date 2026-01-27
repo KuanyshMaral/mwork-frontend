@@ -1,0 +1,183 @@
+/* Admin Dashboard Styles */
+.admin-dashboard {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 40px;
+    background: #f9fafb;
+    min-height: 100vh;
+}
+
+/* Page Heading */
+.admin-dashboard__title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 32px;
+}
+
+/* Stats Grid */
+.admin-dashboard__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+/* Stat Cards */
+.admin-dashboard__card {
+    padding: 24px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.admin-dashboard__card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Icon */
+.admin-dashboard__icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    line-height: 1;
+}
+
+/* Card Number */
+.admin-dashboard__number {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+/* Card Label */
+.admin-dashboard__label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #6b7280;
+    line-height: 1;
+}
+
+/* Loading Skeleton */
+.admin-dashboard__skeleton {
+    padding: 24px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.admin-dashboard__skeleton-icon {
+    width: 48px;
+    height: 48px;
+    background: #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.admin-dashboard__skeleton-number {
+    width: 120px;
+    height: 36px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.admin-dashboard__skeleton-label {
+    width: 80px;
+    height: 16px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Error State */
+.admin-dashboard__error {
+    padding: 16px 24px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #dc2626;
+    font-size: 16px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Animation */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .admin-dashboard {
+        padding: 20px;
+        gap: 20px;
+    }
+    
+    .admin-dashboard__title {
+        font-size: 28px;
+        margin-bottom: 24px;
+    }
+    
+    .admin-dashboard__grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .admin-dashboard__card {
+        padding: 20px;
+    }
+    
+    .admin-dashboard__icon {
+        font-size: 40px;
+        margin-bottom: 12px;
+    }
+    
+    .admin-dashboard__number {
+        font-size: 28px;
+        margin-bottom: 6px;
+    }
+    
+    .admin-dashboard__label {
+        font-size: 14px;
+    }
+    
+    .admin-dashboard__skeleton {
+        padding: 20px;
+    }
+    
+    .admin-dashboard__skeleton-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 12px;
+    }
+    
+    .admin-dashboard__skeleton-number {
+        width: 100px;
+        height: 28px;
+        margin-bottom: 6px;
+    }
+    
+    .admin-dashboard__skeleton-label {
+        width: 70px;
+        height: 14px;
+    }
+}
