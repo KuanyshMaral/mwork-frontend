@@ -206,9 +206,48 @@ export const responseApi = {
         api.patch(`/responses/${responseId}/status`, { status }),
 }
 
-// Admin API methods
-export const adminApi = {
-    getStats: () => api.get('/admin/stats'),
-}
 
-export default api
+// Admin API (new namespace)
+export const adminApi = {
+    /**
+     * Get admin dashboard statistics
+     * @returns {Promise<{total_users, total_castings, active_subscriptions, pending_payments, pending_reports}>}
+     */
+    getStats: () => api.get('/admin/stats'),
+
+    /**
+     * List moderation reports
+     * @param {Object} params - {page, limit, status}
+     * @returns {Promise<{reports: Array, total}>}
+     */
+    listReports: (params = {}) => {
+        const queryString = new URLSearchParams(params).toString();
+        return api.get(`/admin/reports?${queryString}`);
+    },
+
+    /**
+     * Resolve moderation report
+     * @param {string} reportId
+     * @param {Object} data - {action: 'warn'|'suspend'|'delete'|'dismiss', notes}
+     * @returns {Promise<{status}>}
+     */
+    resolveReport: (reportId, data) => api.post(`/admin/reports/${reportId}/resolve`, data),
+};
+
+// Upload API (new namespace)
+export const uploadApi = {
+    /**
+     * Initialize upload and get signed URL
+     * @param {Object} data - {file_name, content_type, file_size}
+     * @returns {Promise<{upload_id, upload_url, expires_at}>}
+     */
+    init: (data) => api.post('/uploads/init', data),
+
+    /**
+     * Confirm upload completion
+     * @param {Object} data - {upload_id}
+     * @returns {Promise<{id, url}>}
+     */
+    confirm: (data) => api.post('/uploads/confirm', data),
+};
+
