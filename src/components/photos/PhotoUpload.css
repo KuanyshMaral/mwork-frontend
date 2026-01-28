@@ -1,0 +1,85 @@
+.photo-upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 24px;
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    background-color: #f9fafb;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
+    margin: 0 auto; /* Centered */
+}
+
+.photo-upload-container:hover {
+    border-color: #3b82f6;
+    background-color: #f0f9ff;
+}
+
+.photo-upload-container.drag-active {
+    border-color: #3b82f6;
+    background-color: #dbeafe;
+}
+
+.upload-content {
+    text-align: center;
+    width: 100%;
+}
+
+.upload-icon {
+    font-size: 64px;
+    color: #9ca3af;
+    line-height: 1;
+    margin-bottom: 16px;
+}
+
+.upload-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    margin-top: 16px;
+    line-height: 1.5;
+}
+
+.upload-helper {
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 8px;
+}
+
+.progress-container {
+    width: 100%;
+    margin-top: 16px;
+}
+
+.progress-bar {
+    height: 8px;
+    background-color: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #3b82f6;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #3b82f6;
+    margin-top: 8px;
+    text-align: right;
+}
+
+@media (max-width: 768px) {
+    .photo-upload-container {
+        max-width: 100%;
+    }
+}
