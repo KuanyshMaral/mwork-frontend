@@ -1,0 +1,294 @@
+/* Admin Reports Page Styles */
+
+.admin-reports {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    padding: 40px;
+    border: none;
+    background: #f9fafb;
+}
+
+/* Page Heading */
+.page-heading {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 32px;
+}
+
+/* Filters */
+.filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.filter-select {
+    padding: 8px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #374151;
+    font-size: 14px;
+}
+
+.filter-button {
+    padding: 8px 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #374151;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.filter-button:hover {
+    background: #f3f4f6;
+}
+
+/* Report Card */
+.report-card {
+    padding: 24px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+    margin-bottom: 16px;
+}
+
+.report-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.report-icon {
+    font-size: 24px;
+    margin-right: 12px;
+}
+
+.report-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.report-details {
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 8px;
+}
+
+.report-description {
+    margin-top: 4px;
+}
+
+.report-timestamp {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 8px;
+}
+
+.report-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.action-button {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.action-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.action-button.warn {
+    background: #fbbf24;
+    color: #1f2937;
+}
+
+.action-button.warn:hover:not(:disabled) {
+    background: #f59e0b;
+}
+
+.action-button.suspend {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+.action-button.suspend:hover:not(:disabled) {
+    background: #dc2626;
+}
+
+.action-button.dismiss {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.action-button.dismiss:hover:not(:disabled) {
+    background: #d1d5db;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6b7280;
+    font-size: 16px;
+}
+
+/* Load More Button */
+.load-more {
+    padding: 12px 24px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 24px;
+    align-self: center;
+    transition: background-color 0.2s;
+}
+
+.load-more:hover:not(:disabled) {
+    background: #f3f4f6;
+}
+
+.load-more:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Skeleton Loading */
+.skeleton {
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    animation: shimmer 1.5s infinite;
+}
+
+.skeleton-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.skeleton-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+    background: #e5e7eb;
+    border-radius: 4px;
+}
+
+.skeleton-title {
+    width: 200px;
+    height: 18px;
+    background: #e5e7eb;
+    border-radius: 4px;
+}
+
+.skeleton-details {
+    width: 100%;
+    height: 14px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    margin-top: 8px;
+}
+
+.skeleton-timestamp {
+    width: 120px;
+    height: 12px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    margin-top: 8px;
+}
+
+.skeleton-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.skeleton-actions::before,
+.skeleton-actions::after {
+    content: '';
+    width: 80px;
+    height: 32px;
+    background: #e5e7eb;
+    border-radius: 6px;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Toast Animation */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .admin-reports {
+        padding: 20px;
+    }
+    
+    .page-heading {
+        font-size: 24px;
+        margin-bottom: 24px;
+    }
+    
+    .filters {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .report-card {
+        padding: 16px;
+    }
+    
+    .report-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .action-button {
+        width: 100%;
+        text-align: center;
+    }
+}

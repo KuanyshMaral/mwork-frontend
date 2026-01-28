@@ -104,7 +104,27 @@ export const dashboardApi = {
 export const subscriptionApi = {
     getPlans: () => api.get('/subscriptions/plans'),
     getCurrent: () => api.get('/subscriptions/current'),
+<<<<<<< HEAD
     subscribe: (data) => api.post('/subscriptions', data),
+=======
+    getPlanById: (id) => api.get(`/subscriptions/plans/${id}`),
+    
+    // Updated to match new requirements
+    subscribe: async (planId, billingPeriod) => {
+        try {
+            return await api.post('/subscriptions/subscribe', { 
+                plan_id: planId, 
+                billing_period: billingPeriod 
+            });
+        } catch (error) {
+            if (error.status === 409) {
+                throw new Error('Already subscribed');
+            }
+            throw error;
+        }
+    },
+    
+>>>>>>> 50cdadbb597e7f6a9facbc05f754c6ace0d8707e
     cancel: (reason) => api.post('/subscriptions/cancel', { reason }),
 }
 
@@ -175,4 +195,13 @@ export const responseApi = {
         api.patch(`/responses/${responseId}/status`, { status }),
 }
 
+<<<<<<< HEAD
 export default api
+=======
+// Admin API methods
+export const adminApi = {
+    getStats: () => api.get('/admin/stats'),
+}
+
+export default api
+>>>>>>> 50cdadbb597e7f6a9facbc05f754c6ace0d8707e

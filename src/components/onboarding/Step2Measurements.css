@@ -1,0 +1,100 @@
+.step2-measurements {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.step-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 8px 0;
+}
+
+.measurements-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.form-input {
+    font-size: 16px;
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+    background-color: #ffffff;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-input.error {
+    border-color: #ef4444;
+}
+
+.form-input.error:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.error-message {
+    font-size: 14px;
+    color: #ef4444;
+    margin-top: 4px;
+}
+
+/* Hips field spans full width */
+.form-group:has(#hips) {
+    grid-column: 1 / -1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .step2-measurements {
+        gap: 16px;
+    }
+    
+    .step-title {
+        font-size: 20px;
+    }
+    
+    .measurements-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .form-group:has(#hips) {
+        grid-column: 1;
+    }
+    
+    .form-input {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+}
+
+@media (max-width: 480px) {
+    .step2-measurements {
+        gap: 12px;
+    }
+    
+    .measurements-grid {
+        gap: 12px;
+    }
+}

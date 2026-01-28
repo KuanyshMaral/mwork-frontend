@@ -1,135 +1,103 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import api from '../../api/client'
-import './Admin.css'
+import React, { useState, useEffect } from 'react';
+import { adminApi } from '../../api/client';
+import './Dashboard.css';
 
-function AdminDashboard() {
-    const [stats, setStats] = useState(null)
-    const [loading, setLoading] = useState(true)
-
+/**
+ * AdminDashboard - Admin overview with key metrics
+ */
+export default function AdminDashboard() {
+    const [stats, setStats] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    
     useEffect(() => {
-        fetchStats()
-    }, [])
-
-    const fetchStats = async () => {
-        try {
-            const response = await api.get('/admin/dashboard/stats')
-            setStats(response.data)
-        } catch (err) {
-            console.error('Failed to fetch stats:', err)
-            // Mock data for development
-            setStats({
-                users: { total: 245, models: 180, employers: 65, new_today: 12 },
-                leads: { total: 45, new: 8, converted: 28, pending: 9 },
-                castings: { total: 89, active: 34, pending_moderation: 5 },
-                revenue: { this_month: 450000, last_month: 380000 }
-            })
-        } finally {
-            setLoading(false)
-        }
-    }
-
+        const fetchStats = async () => {
+            try {
+                const data = await adminApi.getStats();
+                setStats(data);
+            } catch (err) {
+                setError(err.message || 'Не удалось загрузить статистику');
+            } finally {
+                setLoading(false);
+            }
+        };
+        
+        fetchStats();
+        
+        // Auto refresh every 60 seconds
+        const interval = setInterval(fetchStats, 60000);
+        return () => clearInterval(interval);
+    }, []);
+    
     if (loading) {
-        return <div className="admin-page-loading">Загрузка...</div>
+        return (
+            <div className="admin-dashboard">
+                <div className="admin-dashboard__title">Панель управления</div>
+                <div className="admin-dashboard__grid">
+                    {[1, 2, 3, 4].map((i) => (
+                        <div key={i} className="admin-dashboard__skeleton">
+                            <div className="admin-dashboard__skeleton-icon"></div>
+                            <div className="admin-dashboard__skeleton-number"></div>
+                            <div className="admin-dashboard__skeleton-label"></div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
     }
-
+    
+    if (error) {
+        return (
+            <div className="admin-dashboard">
+                <div className="admin-dashboard__title">Панель управления</div>
+                <div className="admin-dashboard__error">
+                    {error}
+                </div>
+            </div>
+        );
+    }
+    
     return (
         <div className="admin-dashboard">
-            <div className="admin-dashboard-header">
-                <h1>Дашборд</h1>
-                <p className="admin-subtitle">Обзор ключевых метрик</p>
-            </div>
-
-            {/* Stats Grid */}
-            <div className="admin-stats-grid">
-                {/* Users */}
-                <div className="admin-stat-card">
-                    <div className="admin-stat-icon">👥</div>
-                    <div className="admin-stat-content">
-                        <h3>Пользователи</h3>
-                        <div className="admin-stat-value">{stats?.users?.total || 0}</div>
-                        <div className="admin-stat-details">
-                            <span>Модели: {stats?.users?.models || 0}</span>
-                            <span>Работодатели: {stats?.users?.employers || 0}</span>
-                        </div>
-                        <div className="admin-stat-badge positive">
-                            +{stats?.users?.new_today || 0} сегодня
-                        </div>
+            <h1 className="admin-dashboard__title">Панель управления</h1>
+            
+            <div className="admin-dashboard__grid">
+                {/* Total Users Card */}
+                <div className="admin-dashboard__card">
+                    <div className="admin-dashboard__icon">👥</div>
+                    <div className="admin-dashboard__number">
+                        {stats?.total_users?.toLocaleString('ru-KZ') || '0'}
                     </div>
+                    <div className="admin-dashboard__label">Пользователей</div>
                 </div>
-
-                {/* Leads */}
-                <div className="admin-stat-card highlight">
-                    <div className="admin-stat-icon">📋</div>
-                    <div className="admin-stat-content">
-                        <h3>Заявки</h3>
-                        <div className="admin-stat-value">{stats?.leads?.new || 0}</div>
-                        <div className="admin-stat-details">
-                            <span>Новых ожидает</span>
-                        </div>
-                        <Link to="/admin/leads" className="admin-stat-link">
-                            Обработать →
-                        </Link>
+                
+                {/* Total Castings Card */}
+                <div className="admin-dashboard__card">
+                    <div className="admin-dashboard__icon">🎬</div>
+                    <div className="admin-dashboard__number">
+                        {stats?.total_castings?.toLocaleString('ru-KZ') || '0'}
                     </div>
+                    <div className="admin-dashboard__label">Кастингов</div>
                 </div>
-
-                {/* Castings */}
-                <div className="admin-stat-card">
-                    <div className="admin-stat-icon">🎬</div>
-                    <div className="admin-stat-content">
-                        <h3>Кастинги</h3>
-                        <div className="admin-stat-value">{stats?.castings?.active || 0}</div>
-                        <div className="admin-stat-details">
-                            <span>Активных</span>
-                        </div>
-                        {stats?.castings?.pending_moderation > 0 && (
-                            <div className="admin-stat-badge warning">
-                                {stats?.castings?.pending_moderation} на модерации
-                            </div>
-                        )}
+                
+                {/* Active Subscriptions Card */}
+                <div className="admin-dashboard__card">
+                    <div className="admin-dashboard__icon">�</div>
+                    <div className="admin-dashboard__number">
+                        {stats?.active_subscriptions?.toLocaleString('ru-KZ') || '0'}
                     </div>
+                    <div className="admin-dashboard__label">Подписок</div>
                 </div>
-
-                {/* Revenue */}
-                <div className="admin-stat-card">
-                    <div className="admin-stat-icon">💰</div>
-                    <div className="admin-stat-content">
-                        <h3>Выручка</h3>
-                        <div className="admin-stat-value">
-                            {(stats?.revenue?.this_month || 0).toLocaleString()} ₸
-                        </div>
-                        <div className="admin-stat-details">
-                            <span>За этот месяц</span>
-                        </div>
-                        {stats?.revenue?.this_month > stats?.revenue?.last_month && (
-                            <div className="admin-stat-badge positive">
-                                ↑ {Math.round((stats?.revenue?.this_month - stats?.revenue?.last_month) / stats?.revenue?.last_month * 100)}%
-                            </div>
-                        )}
+                
+                {/* Pending Reports Card */}
+                <div className="admin-dashboard__card">
+                    <div className="admin-dashboard__icon">⚠️</div>
+                    <div className="admin-dashboard__number">
+                        {stats?.pending_reports?.toLocaleString('ru-KZ') || '0'}
                     </div>
-                </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="admin-section">
-                <h2>Быстрые действия</h2>
-                <div className="admin-quick-actions">
-                    <Link to="/admin/leads?status=new" className="admin-action-btn">
-                        📋 Новые заявки ({stats?.leads?.new || 0})
-                    </Link>
-                    <Link to="/admin/moderation" className="admin-action-btn">
-                        🔍 Модерация ({stats?.castings?.pending_moderation || 0})
-                    </Link>
-                    <Link to="/admin/users" className="admin-action-btn">
-                        👥 Пользователи
-                    </Link>
-                    <Link to="/admin/payments" className="admin-action-btn">
-                        💳 Платежи
-                    </Link>
+                    <div className="admin-dashboard__label">Жалоб</div>
                 </div>
             </div>
         </div>
-    )
+    );
 }
-
-export default AdminDashboard

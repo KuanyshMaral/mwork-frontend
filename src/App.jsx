@@ -18,6 +18,7 @@ import CastingDetail from './pages/CastingDetail'
 import Profile from './pages/Profile'
 import ProfileEdit from './pages/ProfileEdit'
 import Subscriptions from './pages/Subscriptions'
+import Checkout from './pages/Checkout'
 import Photostudios from './pages/Photostudios'
 import Advertising from './pages/Advertising'
 import Chat from './pages/Chat'
@@ -39,6 +40,7 @@ const AdminLeads = lazy(() => import('./pages/admin/Leads'))
 const AdminLeadDetail = lazy(() => import('./pages/admin/LeadDetail'))
 const AdminModeration = lazy(() => import('./pages/admin/Moderation'))
 const AdminUsers = lazy(() => import('./pages/admin/Users'))
+const AdminReports = lazy(() => import('./pages/admin/Reports'))
 
 // Protected Route wrapper
 function ProtectedRoute({ children }) {
@@ -91,6 +93,7 @@ function AppRoutes() {
                     <Route path="/payment/redirect" element={<PaymentRedirect paymentUrl="https://kaspi.kz/payment/test" amount={4990} />} />
                     <Route path="/payment/success" element={<PaymentSuccess />} />
                     <Route path="/payment/failed" element={<PaymentFailed />} />
+                    <Route path="/checkout" element={<Checkout />} />
 
                     {/* Protected routes with Layout */}
                     <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
@@ -132,6 +135,7 @@ function AppRoutes() {
                         <Route path="leads/:id" element={<AdminLeadDetail />} />
                         <Route path="moderation" element={<AdminModeration />} />
                         <Route path="users" element={<AdminUsers />} />
+                        <Route path="reports" element={<AdminReports />} />
                     </Route>
 
                     {/* 404 */}
