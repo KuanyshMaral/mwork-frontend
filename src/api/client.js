@@ -104,6 +104,7 @@ export const dashboardApi = {
 export const subscriptionApi = {
     getPlans: () => api.get('/subscriptions/plans'),
     getCurrent: () => api.get('/subscriptions/current'),
+    getPlanById: (id) => api.get(`/subscriptions/plans/${id}`),
     
     // Updated to match new requirements
     subscribe: async (planId, billingPeriod) => {
@@ -203,6 +204,11 @@ export const responseApi = {
     // Update response status (as employer)
     updateStatus: (responseId, status) =>
         api.patch(`/responses/${responseId}/status`, { status }),
+}
+
+// Admin API methods
+export const adminApi = {
+    getStats: () => api.get('/admin/stats'),
 }
 
 export default api

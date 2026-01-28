@@ -1,0 +1,235 @@
+/* Checkout Page Styles */
+.checkout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px;
+    background: #f9fafb;
+}
+
+/* Page Heading */
+.checkout__title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+/* Plan Card */
+.checkout__plan-card {
+    padding: 24px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+    width: 100%;
+    margin-bottom: 32px;
+}
+
+.checkout__plan-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+.checkout__price {
+    font-size: 32px;
+    font-weight: 700;
+    color: #3b82f6;
+    margin-top: 12px;
+    margin-bottom: 20px;
+}
+
+.checkout__feature {
+    font-size: 16px;
+    color: #374151;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.checkout__checkmark {
+    color: #10b981;
+    margin-right: 8px;
+    font-weight: 700;
+}
+
+/* Billing Period */
+.checkout__billing-period {
+    width: 100%;
+    margin-bottom: 32px;
+}
+
+.checkout__billing-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 16px;
+}
+
+.checkout__radio-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.checkout__radio-label:hover {
+    opacity: 0.8;
+}
+
+.checkout__radio {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkout__radio-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #d1d5db;
+    border-radius: 50%;
+    margin-right: 12px;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.checkout__radio:checked + .checkout__radio-custom {
+    border-color: #3b82f6;
+    background: #3b82f6;
+}
+
+.checkout__radio:checked + .checkout__radio-custom::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+}
+
+.checkout__radio-text {
+    font-size: 16px;
+    color: #374151;
+}
+
+.checkout__radio:checked ~ .checkout__radio-text {
+    color: #1f2937;
+    font-weight: 500;
+}
+
+/* Pay Button */
+.checkout__pay-button {
+    width: 100%;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    background: #3b82f6;
+    padding: 16px 32px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.checkout__pay-button:hover:not(:disabled) {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+.checkout__pay-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Loading States */
+.checkout__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    color: #6b7280;
+}
+
+.checkout__spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e5e7eb;
+    border-top: 3px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+}
+
+.checkout__button-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ffffff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Error State */
+.checkout__error {
+    width: 100%;
+    padding: 12px 16px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #dc2626;
+    font-size: 14px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* Animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .checkout {
+        padding: 20px;
+        max-width: 100%;
+    }
+    
+    .checkout__title {
+        font-size: 28px;
+        margin-bottom: 24px;
+    }
+    
+    .checkout__plan-card {
+        padding: 20px;
+        margin-bottom: 24px;
+    }
+    
+    .checkout__plan-name {
+        font-size: 20px;
+    }
+    
+    .checkout__price {
+        font-size: 28px;
+    }
+    
+    .checkout__pay-button {
+        font-size: 16px;
+        padding: 14px 24px;
+    }
+}
