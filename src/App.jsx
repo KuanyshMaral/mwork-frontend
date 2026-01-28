@@ -40,6 +40,7 @@ const AdminLeads = lazy(() => import('./pages/admin/Leads'))
 const AdminLeadDetail = lazy(() => import('./pages/admin/LeadDetail'))
 const AdminModeration = lazy(() => import('./pages/admin/Moderation'))
 const AdminUsers = lazy(() => import('./pages/admin/Users'))
+const AdminReports = lazy(() => import('./pages/admin/Reports'))
 
 // Protected Route wrapper
 function ProtectedRoute({ children }) {
@@ -134,6 +135,7 @@ function AppRoutes() {
                         <Route path="leads/:id" element={<AdminLeadDetail />} />
                         <Route path="moderation" element={<AdminModeration />} />
                         <Route path="users" element={<AdminUsers />} />
+                        <Route path="reports" element={<AdminReports />} />
                     </Route>
 
                     {/* 404 */}
