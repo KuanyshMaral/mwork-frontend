@@ -17,11 +17,16 @@ import Castings from './pages/Castings'
 import CastingDetail from './pages/CastingDetail'
 import Profile from './pages/Profile'
 import ProfileEdit from './pages/ProfileEdit'
+import ModelOnboarding from './pages/ModelOnboarding'
+import EmployerOnboarding from './pages/EmployerOnboarding'
 import Subscriptions from './pages/Subscriptions'
 import Checkout from './pages/Checkout'
 import Photostudios from './pages/Photostudios'
 import Advertising from './pages/Advertising'
 import Chat from './pages/Chat'
+import CreateCasting from './pages/CreateCasting'
+import MyCastings from './pages/MyCastings'
+import MyApplications from './pages/MyApplications'
 import PaymentSuccess from './pages/PaymentSuccess'
 import PaymentFailed from './pages/PaymentFailed'
 import PaymentRedirect from './components/payment/PaymentRedirect'
@@ -40,6 +45,7 @@ const AdminLeads = lazy(() => import('./pages/admin/Leads'))
 const AdminLeadDetail = lazy(() => import('./pages/admin/LeadDetail'))
 const AdminModeration = lazy(() => import('./pages/admin/Moderation'))
 const AdminUsers = lazy(() => import('./pages/admin/Users'))
+const AdminReports = lazy(() => import('./pages/admin/Reports'))
 
 // Protected Route wrapper
 function ProtectedRoute({ children }) {
@@ -94,11 +100,19 @@ function AppRoutes() {
                     <Route path="/payment/failed" element={<PaymentFailed />} />
                     <Route path="/checkout" element={<Checkout />} />
 
+                    {/* Onboarding routes - accessible without authentication */}
+                    <Route path="/onboarding/model" element={<ModelOnboarding />} />
+                    <Route path="/onboarding/employer" element={<EmployerOnboarding />} />
+
                     {/* Protected routes with Layout */}
                     <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
                         <Route path="dashboard" element={<Dashboard />} />
                         <Route path="castings" element={<Castings />} />
+                        <Route path="castings/create" element={<CreateCasting />} />
+                        <Route path="castings/edit/:id" element={<CreateCasting />} />
+                        <Route path="castings/my" element={<MyCastings />} />
                         <Route path="castings/:id" element={<CastingDetail />} />
+                        <Route path="applications" element={<MyApplications />} />
                         <Route path="photostudios" element={<Photostudios />} />
                         <Route path="advertising" element={<Advertising />} />
                         <Route path="messages" element={<Chat />} />
@@ -134,6 +148,7 @@ function AppRoutes() {
                         <Route path="leads/:id" element={<AdminLeadDetail />} />
                         <Route path="moderation" element={<AdminModeration />} />
                         <Route path="users" element={<AdminUsers />} />
+                        <Route path="reports" element={<AdminReports />} />
                     </Route>
 
                     {/* 404 */}

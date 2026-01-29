@@ -29,6 +29,12 @@ export default function ProfileEdit() {
         experience_years: '',
         specializations: [],
         languages: [],
+        visibility: 'public',
+        travel_cities: [],
+        categories: [],
+        skills: [],
+        barter_accepted: false,
+        accept_remote_work: false,
     })
     const [saving, setSaving] = useState(false)
     const [error, setError] = useState('')
@@ -54,6 +60,12 @@ export default function ProfileEdit() {
                 experience_years: profile.experience_years || '',
                 specializations: profile.specializations || [],
                 languages: profile.languages || [],
+                visibility: profile.visibility || 'public',
+                travel_cities: profile.travel_cities || [],
+                categories: profile.categories || [],
+                skills: profile.skills || [],
+                barter_accepted: profile.barter_accepted || false,
+                accept_remote_work: profile.accept_remote_work || false,
             })
         }
     }, [profile])
@@ -101,7 +113,7 @@ export default function ProfileEdit() {
 
     const handleNext = () => {
         if (validateStep(currentStep)) {
-            if (currentStep < 4) {
+            if (currentStep < 5) {
                 setCurrentStep(currentStep + 1)
             } else {
                 handleSubmit(new Event('submit'))
@@ -136,6 +148,12 @@ export default function ProfileEdit() {
                 waist_cm: formData.waist_cm ? parseInt(formData.waist_cm) : null,
                 hips_cm: formData.hips_cm ? parseInt(formData.hips_cm) : null,
                 hourly_rate: formData.hourly_rate ? parseFloat(formData.hourly_rate) : null,
+                visibility: formData.visibility,
+                travel_cities: formData.travel_cities,
+                categories: formData.categories,
+                skills: formData.skills,
+                barter_accepted: formData.barter_accepted,
+                accept_remote_work: formData.accept_remote_work,
             }
 
             const updated = await profileApi.update(profile.id, data)
@@ -419,6 +437,103 @@ export default function ProfileEdit() {
                         </div>
                     </div>
                 )
+            case 5:
+                return (
+                    <div className="card form-section">
+                        <h3>Настройки профиля</h3>
+                        {error && <div className="auth-error">{error}</div>}
+
+                        <div className="form-group">
+                            <label className="form-label">Видимость профиля</label>
+                            <select
+                                name="visibility"
+                                className="form-input"
+                                value={formData.visibility}
+                                onChange={handleChange}
+                            >
+                                <option value="public">Публичный</option>
+                                <option value="link_only">Только по ссылке</option>
+                                <option value="hidden">Скрытый</option>
+                            </select>
+                            <small style={{ color: '#6b7280', marginTop: '4px', display: 'block' }}>
+                                Публичный - виден всем, По ссылке - только у кого есть ссылка, Скрытый - никому не виден
+                            </small>
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Города для работы</label>
+                            <textarea
+                                name="travel_cities"
+                                className="form-input form-textarea"
+                                placeholder="Укажите города через запятую (например: Алматы, Астана, Шымкент)"
+                                value={Array.isArray(formData.travel_cities) ? formData.travel_cities.join(', ') : formData.travel_cities}
+                                onChange={(e) => {
+                                    const travel_cities = e.target.value.split(',').map(s => s.trim()).filter(s => s)
+                                    setFormData(prev => ({ ...prev, travel_cities }))
+                                }}
+                                rows={2}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Категории</label>
+                            <textarea
+                                name="categories"
+                                className="form-input form-textarea"
+                                placeholder="Укажите категории через запятую (например: Фото, Видео, Реклама)"
+                                value={Array.isArray(formData.categories) ? formData.categories.join(', ') : formData.categories}
+                                onChange={(e) => {
+                                    const categories = e.target.value.split(',').map(s => s.trim()).filter(s => s)
+                                    setFormData(prev => ({ ...prev, categories }))
+                                }}
+                                rows={2}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Навыки</label>
+                            <textarea
+                                name="skills"
+                                className="form-input form-textarea"
+                                placeholder="Укажите навыки через запятую (например: Позирование, Актерское мастерство)"
+                                value={Array.isArray(formData.skills) ? formData.skills.join(', ') : formData.skills}
+                                onChange={(e) => {
+                                    const skills = e.target.value.split(',').map(s => s.trim()).filter(s => s)
+                                    setFormData(prev => ({ ...prev, skills }))
+                                }}
+                                rows={2}
+                            />
+                        </div>
+
+                        <div className="form-row" style={{ marginTop: '20px' }}>
+                            <div className="form-group">
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                                    <input
+                                        type="checkbox"
+                                        name="barter_accepted"
+                                        checked={formData.barter_accepted}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, barter_accepted: e.target.checked }))}
+                                        style={{ width: '20px', height: '20px', accentColor: '#3b82f6' }}
+                                    />
+                                    <span style={{ fontSize: '0.9375rem', color: '#374151' }}>Принимаю бартер (TFP)</span>
+                                </label>
+                            </div>
+
+                            <div className="form-group">
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                                    <input
+                                        type="checkbox"
+                                        name="accept_remote_work"
+                                        checked={formData.accept_remote_work}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, accept_remote_work: e.target.checked }))}
+                                        style={{ width: '20px', height: '20px', accentColor: '#3b82f6' }}
+                                    />
+                                    <span style={{ fontSize: '0.9375rem', color: '#374151' }}>Готов к удаленной работе</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                )
             default:
                 return null
         }
@@ -435,7 +550,7 @@ export default function ProfileEdit() {
                 {/* Progress Indicator */}
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px', padding: '20px 0' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 0, position: 'relative' }}>
-                        {[1, 2, 3, 4].map((step) => (
+                        {[1, 2, 3, 4, 5].map((step) => (
                             <div key={step}>
                                 <div
                                     style={{
@@ -459,7 +574,7 @@ export default function ProfileEdit() {
                                 >
                                     {step}
                                 </div>
-                                {step < 4 && (
+                                {step < 5 && (
                                     <div
                                         style={{
                                             width: '80px',
@@ -525,7 +640,7 @@ export default function ProfileEdit() {
                         onClick={handleNext}
                         disabled={saving}
                     >
-                        {saving ? 'Сохранение...' : currentStep === 4 ? 'Сохранить' : 'Далее →'}
+                        {saving ? 'Сохранение...' : currentStep === 5 ? 'Сохранить' : 'Далее →'}
                     </button>
                 </div>
             </div>

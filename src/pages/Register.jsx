@@ -37,7 +37,29 @@ export default function Register() {
 
     function selectRole(role) {
         setFormData(prev => ({ ...prev, role }))
-        setStep(role)
+        
+        // For models and employers, go directly to onboarding (skip the form)
+        if (role === 'model') {
+            navigate('/onboarding/model')
+        } else if (role === 'employer') {
+            navigate('/onboarding/employer')
+        } else {
+            setStep(role)
+        }
+    }
+
+    // New function to handle authentication during onboarding
+    async function handleOnboardingAuth(data, role) {
+        try {
+            await register({
+                email: data.email,
+                password: data.password,
+                role: role,
+            })
+            return true
+        } catch (err) {
+            return false
+        }
     }
 
     function goBack() {
@@ -62,7 +84,21 @@ export default function Register() {
                 password: formData.password,
                 role: formData.role,
             })
-            navigate('/dashboard')
+            
+            // Redirect to appropriate onboarding page based on role
+            switch (formData.role) {
+                case 'model':
+                    navigate('/onboarding/model')
+                    break
+                case 'employer':
+                    navigate('/onboarding/employer')
+                    break
+                case 'agency':
+                    navigate('/onboarding/employer') // MVP: agency uses employer onboarding
+                    break
+                default:
+                    navigate('/dashboard')
+            }
         } catch (err) {
             setError(err.message || 'Ошибка регистрации')
         } finally {
