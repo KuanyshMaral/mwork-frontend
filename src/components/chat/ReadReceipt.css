@@ -1,0 +1,22 @@
+.read-receipt {
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.8;
+    margin-left: 4px;
+}
+
+.read-receipt.read {
+    color: #10b981;
+}
+
+.read-receipt.sent {
+    opacity: 0.6;
+}
+
+.message.own .read-receipt.read {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.message.own .read-receipt.sent {
+    color: rgba(255, 255, 255, 0.7);
+}

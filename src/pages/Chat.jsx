@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useChat } from '../context/ChatContext.jsx'
+import { chatApi } from '../api/client'
+import ChatImageUpload from '../components/chat/ChatImageUpload'
+import ReadReceipt from '../components/chat/ReadReceipt'
 import './Chat.css'
 
 export default function Chat() {
@@ -164,14 +167,21 @@ export default function Chat() {
                                                 </div>
                                             )}
                                             <div className={`message ${msg.is_own ? 'own' : 'other'}`}>
-                                                <div className="message-content">{msg.content}</div>
+                                                <div className="message-content">
+                                                    {msg.message_type === 'image' ? (
+                                                        <img 
+                                                            src={msg.content} 
+                                                            alt="Изображение" 
+                                                            className="message-image"
+                                                            onClick={() => window.open(msg.content, '_blank')}
+                                                        />
+                                                    ) : (
+                                                        msg.content
+                                                    )}
+                                                </div>
                                                 <div className="message-meta">
                                                     <span className="message-time">{formatTime(msg.created_at)}</span>
-                                                    {msg.is_own && (
-                                                        <span className="message-status">
-                                                            {msg.is_read ? '✓✓' : '✓'}
-                                                        </span>
-                                                    )}
+                                                    <ReadReceipt isRead={msg.is_read} isOwn={msg.is_own} />
                                                 </div>
                                             </div>
                                         </div>
@@ -183,6 +193,7 @@ export default function Chat() {
 
                         {/* Input */}
                         <form className="chat-input-form" onSubmit={handleSend}>
+                            <ChatImageUpload roomId={activeRoom.id} onMessageSent={() => {}} />
                             <input
                                 type="text"
                                 value={input}

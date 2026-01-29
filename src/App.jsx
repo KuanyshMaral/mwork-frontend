@@ -22,6 +22,9 @@ import Checkout from './pages/Checkout'
 import Photostudios from './pages/Photostudios'
 import Advertising from './pages/Advertising'
 import Chat from './pages/Chat'
+import CreateCasting from './pages/CreateCasting'
+import MyCastings from './pages/MyCastings'
+import MyApplications from './pages/MyApplications'
 import PaymentSuccess from './pages/PaymentSuccess'
 import PaymentFailed from './pages/PaymentFailed'
 import PaymentRedirect from './components/payment/PaymentRedirect'
@@ -99,7 +102,11 @@ function AppRoutes() {
                     <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
                         <Route path="dashboard" element={<Dashboard />} />
                         <Route path="castings" element={<Castings />} />
+                        <Route path="castings/create" element={<CreateCasting />} />
+                        <Route path="castings/edit/:id" element={<CreateCasting />} />
+                        <Route path="castings/my" element={<MyCastings />} />
                         <Route path="castings/:id" element={<CastingDetail />} />
+                        <Route path="applications" element={<MyApplications />} />
                         <Route path="photostudios" element={<Photostudios />} />
                         <Route path="advertising" element={<Advertising />} />
                         <Route path="messages" element={<Chat />} />

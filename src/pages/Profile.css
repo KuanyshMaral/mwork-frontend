@@ -147,6 +147,50 @@
     color: var(--text-primary);
 }
 
+/* Profile Actions */
+.profile-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-primary {
+    background: #6366f1;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #4f46e5;
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.btn-secondary:hover {
+    background: #d1d5db;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .profile-content {
