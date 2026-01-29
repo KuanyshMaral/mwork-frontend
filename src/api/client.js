@@ -282,3 +282,4 @@ export const moderationApi = {
     isBlocked: (userId) => api.get(`/moderation/block/${userId}`),
 };
 
+export default api;
