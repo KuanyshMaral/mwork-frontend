@@ -1,0 +1,130 @@
+.models-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.page-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 8px;
+}
+
+.page-header p {
+    font-size: 16px;
+    color: #718096;
+    margin: 0;
+}
+
+.results-count {
+    margin-top: 12px !important;
+    font-weight: 500 !important;
+    color: #4a5568 !important;
+}
+
+.models-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.loading {
+    text-align: center;
+    padding: 60px 20px;
+    font-size: 18px;
+    color: #718096;
+}
+
+.no-results {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.no-results h3 {
+    font-size: 20px;
+    color: #2d3748;
+    margin-bottom: 8px;
+}
+
+.no-results p {
+    color: #718096;
+    margin: 0;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 32px;
+    padding: 20px;
+}
+
+.pagination-btn {
+    background: #3182ce;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #2c5282;
+}
+
+.pagination-btn:disabled {
+    background: #cbd5e0;
+    cursor: not-allowed;
+}
+
+.pagination-info {
+    font-size: 14px;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .models-page {
+        padding: 16px;
+    }
+    
+    .page-header h1 {
+        font-size: 24px;
+    }
+    
+    .models-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 16px;
+    }
+    
+    .pagination {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .pagination-btn {
+        width: 100%;
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .models-grid {
+        grid-template-columns: 1fr;
+    }
+}

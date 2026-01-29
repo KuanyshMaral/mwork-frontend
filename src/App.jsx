@@ -14,6 +14,7 @@ import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import Dashboard from './pages/Dashboard'
 import Castings from './pages/Castings'
+import Models from './pages/Models'
 import CastingDetail from './pages/CastingDetail'
 import Profile from './pages/Profile'
 import ProfileEdit from './pages/ProfileEdit'
@@ -112,6 +113,7 @@ function AppRoutes() {
                         <Route path="castings/edit/:id" element={<CreateCasting />} />
                         <Route path="castings/my" element={<MyCastings />} />
                         <Route path="castings/:id" element={<CastingDetail />} />
+                        <Route path="models" element={<Models />} />
                         <Route path="applications" element={<MyApplications />} />
                         <Route path="photostudios" element={<Photostudios />} />
                         <Route path="advertising" element={<Advertising />} />
