@@ -1,0 +1,51 @@
+.chat-image-upload {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.upload-btn {
+    width: 48px;
+    height: 48px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.upload-btn:hover:not(:disabled) {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+}
+
+.upload-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.upload-icon {
+    font-size: 1.25rem;
+}
+
+.upload-spinner {
+    font-size: 1.125rem;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.upload-error {
+    position: absolute;
+    bottom: -24px;
+    left: 0;
+    font-size: 0.75rem;
+    color: #ef4444;
+    white-space: nowrap;
+}

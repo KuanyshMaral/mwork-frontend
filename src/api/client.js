@@ -251,3 +251,35 @@ export const uploadApi = {
     confirm: (data) => api.post('/uploads/confirm', data),
 };
 
+// Moderation API (block/report)
+export const moderationApi = {
+    /**
+     * Block a user
+     * @param {string} userId - The user ID to block
+     * @returns {Promise<{status}>}
+     */
+    block: (userId) => api.post(`/moderation/block/${userId}`),
+
+    /**
+     * Unblock a user
+     * @param {string} userId - The user ID to unblock
+     * @returns {Promise<{status}>}
+     */
+    unblock: (userId) => api.delete(`/moderation/block/${userId}`),
+
+    /**
+     * Report a user
+     * @param {Object} data - {reported_user_id, reason, details?}
+     * @returns {Promise<{status}>}
+     */
+    report: (data) => api.post('/moderation/report', data),
+
+    /**
+     * Check if a user is blocked
+     * @param {string} userId - The user ID to check
+     * @returns {Promise<{is_blocked}>}
+     */
+    isBlocked: (userId) => api.get(`/moderation/block/${userId}`),
+};
+
+export default api;

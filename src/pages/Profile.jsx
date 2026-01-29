@@ -1,19 +1,26 @@
 import { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { profileApi, reviewApi } from '../api/client'
+import { useParams, Link, useNavigate } from 'react-router-dom'
+import { profileApi, reviewApi, chatApi, moderationApi } from '../api/client'
 import { useAuth } from '../hooks/useAuth.jsx'
+import BlockUserButton from '../components/moderation/BlockUserButton'
+import ReportUserModal from '../components/moderation/ReportUserModal'
 import './Profile.css'
 
 export default function Profile() {
     const { id } = useParams()
+    const navigate = useNavigate()
     const { profile: myProfile, user } = useAuth()
 
     const [profile, setProfile] = useState(null)
     const [loading, setLoading] = useState(true)
     const [reviewsSummary, setReviewsSummary] = useState(null)
+    const [isBlocked, setIsBlocked] = useState(false)
+    const [showReportModal, setShowReportModal] = useState(false)
+    const [startingChat, setStartingChat] = useState(false)
 
     const isOwn = !id || (myProfile && id === myProfile.id)
     const profileId = isOwn ? myProfile?.id : id
+    const profileUserId = profile?.user_id || id
 
     useEffect(() => {
         if (profileId) {
@@ -40,6 +47,23 @@ export default function Profile() {
         } finally {
             setLoading(false)
         }
+    }
+
+    async function handleStartChat() {
+        if (isBlocked) return
+        setStartingChat(true)
+        try {
+            await chatApi.createRoom(profileUserId)
+            navigate('/messages')
+        } catch (err) {
+            console.error('Failed to start chat:', err)
+        } finally {
+            setStartingChat(false)
+        }
+    }
+
+    function handleBlockChange(blocked) {
+        setIsBlocked(blocked)
     }
 
     if (loading) {
@@ -69,10 +93,31 @@ export default function Profile() {
                     </h1>
                     <p>{profile.city}</p>
                 </div>
-                {isOwn && (
+                {isOwn ? (
                     <Link to="/profile/edit" className="btn btn-secondary">
                         ✏️ Редактировать
                     </Link>
+                ) : (
+                    <div className="profile-actions">
+                        <button
+                            className="btn btn-primary"
+                            onClick={handleStartChat}
+                            disabled={startingChat || isBlocked}
+                        >
+                            {startingChat ? 'Загрузка...' : '💬 Написать'}
+                        </button>
+                        <BlockUserButton
+                            userId={profileUserId}
+                            initialBlocked={isBlocked}
+                            onBlockChange={handleBlockChange}
+                        />
+                        <button
+                            className="btn btn-secondary"
+                            onClick={() => setShowReportModal(true)}
+                        >
+                            ⚠️ Пожаловаться
+                        </button>
+                    </div>
                 )}
             </div>
 
@@ -176,6 +221,14 @@ export default function Profile() {
                     </div>
                 </div>
             </div>
+
+            {/* Report Modal */}
+            <ReportUserModal
+                userId={profileUserId}
+                userName={`${profile.first_name} ${profile.last_name}`}
+                isOpen={showReportModal}
+                onClose={() => setShowReportModal(false)}
+            />
         </div>
     )
 }
