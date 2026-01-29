@@ -79,6 +79,10 @@ export const profileApi = {
     deleteSocialLink: (id, platform) => api.delete(`/profiles/${id}/social-links/${platform}`),
     createModel: (data) => api.post('/profiles/models', data),
     createEmployer: (data) => api.post('/profiles/employers', data),
+    listModels: (params) => {
+        const queryString = new URLSearchParams(params).toString()
+        return api.get(`/profiles/models${queryString ? `?${queryString}` : ''}`)
+    },
 }
 
 // Casting methods
