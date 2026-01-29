@@ -77,6 +77,8 @@ export const profileApi = {
     getSocialLinks: (id) => api.get(`/profiles/${id}/social-links`),
     addSocialLink: (id, data) => api.post(`/profiles/${id}/social-links`, data),
     deleteSocialLink: (id, platform) => api.delete(`/profiles/${id}/social-links/${platform}`),
+    createModel: (data) => api.post('/profiles/models', data),
+    createEmployer: (data) => api.post('/profiles/employers', data),
 }
 
 // Casting methods

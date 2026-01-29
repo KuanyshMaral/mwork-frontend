@@ -5,6 +5,17 @@
     width: 100%;
 }
 
+.step1-basic-info .form-group {
+    margin-bottom: 20px;
+}
+
+.step1-basic-info .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
 .step-title {
     font-size: 24px;
     font-weight: 700;

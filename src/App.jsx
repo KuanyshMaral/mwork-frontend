@@ -17,6 +17,8 @@ import Castings from './pages/Castings'
 import CastingDetail from './pages/CastingDetail'
 import Profile from './pages/Profile'
 import ProfileEdit from './pages/ProfileEdit'
+import ModelOnboarding from './pages/ModelOnboarding'
+import EmployerOnboarding from './pages/EmployerOnboarding'
 import Subscriptions from './pages/Subscriptions'
 import Checkout from './pages/Checkout'
 import Photostudios from './pages/Photostudios'
@@ -97,6 +99,10 @@ function AppRoutes() {
                     <Route path="/payment/success" element={<PaymentSuccess />} />
                     <Route path="/payment/failed" element={<PaymentFailed />} />
                     <Route path="/checkout" element={<Checkout />} />
+
+                    {/* Onboarding routes - accessible without authentication */}
+                    <Route path="/onboarding/model" element={<ModelOnboarding />} />
+                    <Route path="/onboarding/employer" element={<EmployerOnboarding />} />
 
                     {/* Protected routes with Layout */}
                     <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>

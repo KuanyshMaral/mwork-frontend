@@ -31,6 +31,44 @@ export default function Step1BasicInfo({ data, onChange, errors }) {
         <div className="step1-basic-info">
             <h2 className="step-title">Основная информация</h2>
             
+            <div className="form-row">
+                <div className="form-group">
+                    <label htmlFor="email" className="form-label">
+                        Email*
+                    </label>
+                    <input
+                        type="email"
+                        id="email"
+                        className={`form-input ${errors.email && touched.email ? 'error' : ''}`}
+                        value={data.email || ''}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        onBlur={() => handleBlur('email')}
+                        placeholder="your@email.com"
+                    />
+                    {errors.email && touched.email && (
+                        <span className="error-message">{errors.email}</span>
+                    )}
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="password" className="form-label">
+                        Пароль*
+                    </label>
+                    <input
+                        type="password"
+                        id="password"
+                        className={`form-input ${errors.password && touched.password ? 'error' : ''}`}
+                        value={data.password || ''}
+                        onChange={(e) => handleInputChange('password', e.target.value)}
+                        onBlur={() => handleBlur('password')}
+                        placeholder="Минимум 6 символов"
+                    />
+                    {errors.password && touched.password && (
+                        <span className="error-message">{errors.password}</span>
+                    )}
+                </div>
+            </div>
+
             <div className="form-group">
                 <label htmlFor="first_name" className="form-label">
                     Имя*
