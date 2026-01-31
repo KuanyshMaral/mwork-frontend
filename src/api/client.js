@@ -104,6 +104,22 @@ export const castingApi = {
 // Dashboard methods
 export const dashboardApi = {
     getModelStats: () => api.get('/dashboard/model/stats'),
+    getEmployerStats: () => api.get('/dashboard/employer'),
+}
+
+// Agency API
+export const agencyApi = {
+    getMyAgency: () => api.get('/agencies/me'),
+    getById: (id) => api.get(`/agencies/${id}`),
+    getStats: () => api.get('/agencies/me/stats'),
+    getTeam: () => api.get('/agencies/me/team'),
+    inviteMember: (data) => api.post('/agencies/me/team/invite', data),
+    removeMember: (memberId) => api.delete(`/agencies/me/team/${memberId}`),
+    updateMemberRole: (memberId, role) => api.patch(`/agencies/me/team/${memberId}`, { role }),
+    follow: (agencyId) => api.post(`/agencies/${agencyId}/follow`),
+    unfollow: (agencyId) => api.delete(`/agencies/${agencyId}/follow`),
+    getFollowers: (agencyId) => api.get(`/agencies/${agencyId}/followers`),
+    update: (data) => api.put('/agencies/me', data),
 }
 
 // Subscription methods
@@ -238,6 +254,52 @@ export const adminApi = {
      * @returns {Promise<{status}>}
      */
     resolveReport: (reportId, data) => api.post(`/admin/reports/${reportId}/resolve`, data),
+
+    /**
+     * Get revenue analytics
+     * @param {Object} params - {period: 'day'|'week'|'month'|'year'}
+     * @returns {Promise<{total_revenue, chart_data, top_spenders}>}
+     */
+    getRevenue: (params = {}) => {
+        const queryString = new URLSearchParams(params).toString();
+        return api.get(`/admin/analytics/revenue${queryString ? `?${queryString}` : ''}`);
+    },
+
+    /**
+     * List users with filters
+     * @param {Object} params - {page, limit, role, search, status}
+     * @returns {Promise<{users: Array, total}>}
+     */
+    listUsers: (params = {}) => {
+        const queryString = new URLSearchParams(params).toString();
+        return api.get(`/admin/users?${queryString}`);
+    },
+
+    /**
+     * Get user details
+     * @param {string} userId
+     * @returns {Promise<User>}
+     */
+    getUserById: (userId) => api.get(`/admin/users/${userId}`),
+
+    /**
+     * Ban user
+     * @param {string} userId
+     * @param {Object} data - {reason}
+     */
+    banUser: (userId, data) => api.post(`/admin/users/${userId}/ban`, data),
+
+    /**
+     * Unban user
+     * @param {string} userId
+     */
+    unbanUser: (userId) => api.post(`/admin/users/${userId}/unban`),
+
+    /**
+     * Verify user email
+     * @param {string} userId
+     */
+    verifyUser: (userId) => api.post(`/admin/users/${userId}/verify`),
 };
 
 // Upload API (new namespace)

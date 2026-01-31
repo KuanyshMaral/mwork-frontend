@@ -47,6 +47,16 @@ const AdminLeadDetail = lazy(() => import('./pages/admin/LeadDetail'))
 const AdminModeration = lazy(() => import('./pages/admin/Moderation'))
 const AdminUsers = lazy(() => import('./pages/admin/Users'))
 const AdminReports = lazy(() => import('./pages/admin/Reports'))
+const AdminFinance = lazy(() => import('./pages/admin/Finance'))
+
+// Agency (lazy loaded)
+const AgencyDashboard = lazy(() => import('./pages/agency/AgencyDashboard'))
+const AgencyProfile = lazy(() => import('./pages/agency/AgencyProfile'))
+const TeamManagement = lazy(() => import('./pages/agency/TeamManagement'))
+const AgencyPublic = lazy(() => import('./pages/AgencyPublic'))
+
+// Employer
+const EmployerDashboard = lazy(() => import('./pages/EmployerDashboard'))
 
 // Protected Route wrapper
 function ProtectedRoute({ children }) {
@@ -129,6 +139,37 @@ function AppRoutes() {
                                 <NotificationSettings />
                             </Suspense>
                         } />
+
+                        {/* Employer Dashboard */}
+                        <Route path="employer" element={
+                            <Suspense fallback={<div className="loading">Загрузка...</div>}>
+                                <EmployerDashboard />
+                            </Suspense>
+                        } />
+
+                        {/* Agency routes */}
+                        <Route path="agency" element={
+                            <Suspense fallback={<div className="loading">Загрузка...</div>}>
+                                <AgencyDashboard />
+                            </Suspense>
+                        } />
+                        <Route path="agency/profile" element={
+                            <Suspense fallback={<div className="loading">Загрузка...</div>}>
+                                <AgencyProfile />
+                            </Suspense>
+                        } />
+                        <Route path="agency/team" element={
+                            <Suspense fallback={<div className="loading">Загрузка...</div>}>
+                                <TeamManagement />
+                            </Suspense>
+                        } />
+
+                        {/* Public agency page */}
+                        <Route path="agencies/:id" element={
+                            <Suspense fallback={<div className="loading">Загрузка...</div>}>
+                                <AgencyPublic />
+                            </Suspense>
+                        } />
                     </Route>
 
                     {/* Admin routes (lazy loaded) */}
@@ -151,6 +192,7 @@ function AppRoutes() {
                         <Route path="moderation" element={<AdminModeration />} />
                         <Route path="users" element={<AdminUsers />} />
                         <Route path="reports" element={<AdminReports />} />
+                        <Route path="finance" element={<AdminFinance />} />
                     </Route>
 
                     {/* 404 */}
