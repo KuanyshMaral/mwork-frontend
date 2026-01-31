@@ -1,0 +1,151 @@
+.revenue-chart {
+    background: #1a1a2e;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.chart-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #fff;
+}
+
+.chart-totals {
+    text-align: right;
+}
+
+.total-amount {
+    display: block;
+    font-size: 28px;
+    font-weight: 700;
+    color: #10b981;
+}
+
+.total-label {
+    font-size: 12px;
+    color: #666;
+}
+
+.chart-legend {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #888;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+.legend-item.subscriptions .legend-dot {
+    background: #8b5cf6;
+}
+
+.legend-item.promotions .legend-dot {
+    background: #10b981;
+}
+
+.legend-value {
+    font-weight: 600;
+    color: #fff;
+}
+
+.chart-container {
+    height: 220px;
+}
+
+.chart-bars {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 100%;
+    gap: 12px;
+}
+
+.bar-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    position: relative;
+}
+
+.stacked-bar {
+    flex: 1;
+    width: 100%;
+    max-width: 40px;
+    display: flex;
+    flex-direction: column-reverse;
+    border-radius: 4px 4px 0 0;
+    overflow: hidden;
+}
+
+.bar-segment {
+    transition: height 0.3s ease;
+}
+
+.bar-segment.subscriptions {
+    background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%);
+}
+
+.bar-segment.promotions {
+    background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+}
+
+.bar-label {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #666;
+}
+
+.bar-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2a2a3e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    min-width: 160px;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.tooltip-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.tooltip-row:last-child {
+    margin-bottom: 0;
+}
+
+.tooltip-row span {
+    color: #888;
+}
+
+.tooltip-row strong {
+    color: #fff;
+}

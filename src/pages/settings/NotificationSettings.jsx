@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import api from '../../api/client'
+import { useNotifications } from '../../context/NotificationContext'
 import './NotificationSettings.css'
 
 const NOTIFICATION_TYPES = [
@@ -38,13 +39,36 @@ const NOTIFICATION_TYPES = [
         label: 'Истечение кастинга',
         description: 'Напоминание о скором завершении кастинга',
         forRoles: ['employer']
+    },
+    {
+        key: 'new_follower',
+        label: 'Новые подписчики',
+        description: 'Когда кто-то подписывается на ваш профиль или агентство',
+        forRoles: ['model', 'employer', 'agency']
     }
 ]
 
+const DEFAULT_PREFERENCES = {
+    email_enabled: true,
+    push_enabled: true,
+    in_app_enabled: true,
+    new_response_channels: { in_app: true, email: true, push: true },
+    response_accepted_channels: { in_app: true, email: true, push: true },
+    response_rejected_channels: { in_app: true, email: true, push: false },
+    new_message_channels: { in_app: true, email: false, push: true },
+    profile_viewed_channels: { in_app: true, email: false, push: false },
+    casting_expiring_channels: { in_app: true, email: true, push: false },
+    new_follower_channels: { in_app: true, email: false, push: false },
+    digest_enabled: true,
+    digest_frequency: 'weekly'
+}
+
 function NotificationSettings() {
+    const { preferences: contextPrefs, savePreferences: saveToContext } = useNotifications()
     const [preferences, setPreferences] = useState(null)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
+    const [apiAvailable, setApiAvailable] = useState(true)
     const [userRole] = useState(() => {
         try {
             const user = JSON.parse(localStorage.getItem('user') || '{}')
@@ -61,40 +85,40 @@ function NotificationSettings() {
     const fetchPreferences = async () => {
         try {
             const response = await api.get('/notifications/preferences')
-            setPreferences(response.data)
+            const data = response?.data || response
+            setPreferences(data)
+            setApiAvailable(true)
         } catch (err) {
-            console.error('Failed to fetch preferences:', err)
-            // Set defaults
-            setPreferences({
-                email_enabled: true,
-                push_enabled: true,
-                in_app_enabled: true,
-                new_response_channels: { in_app: true, email: true, push: true },
-                response_accepted_channels: { in_app: true, email: true, push: true },
-                response_rejected_channels: { in_app: true, email: true, push: false },
-                new_message_channels: { in_app: true, email: false, push: true },
-                profile_viewed_channels: { in_app: true, email: false, push: false },
-                casting_expiring_channels: { in_app: true, email: true, push: false },
-                digest_enabled: true,
-                digest_frequency: 'weekly'
-            })
+            console.error('Failed to fetch preferences from API, using local storage:', err)
+            setApiAvailable(false)
+            // Use context preferences or defaults
+            setPreferences(contextPrefs || DEFAULT_PREFERENCES)
         } finally {
             setLoading(false)
         }
     }
 
-    const updatePreferences = async (updates) => {
+    const updatePreferences = useCallback(async (updates) => {
         setSaving(true)
+        const newPrefs = { ...preferences, ...updates }
+        
         try {
-            await api.put('/notifications/preferences', updates)
-            setPreferences(prev => ({ ...prev, ...updates }))
+            if (apiAvailable) {
+                await api.put('/notifications/preferences', updates)
+            }
+            setPreferences(newPrefs)
+            // Always save to context/localStorage as backup
+            saveToContext(newPrefs)
         } catch (err) {
-            console.error('Failed to update preferences:', err)
-            alert('Ошибка сохранения настроек')
+            console.error('Failed to update preferences on server, saving locally:', err)
+            setApiAvailable(false)
+            // Save locally even if API fails
+            setPreferences(newPrefs)
+            saveToContext(newPrefs)
         } finally {
             setSaving(false)
         }
-    }
+    }, [preferences, apiAvailable, saveToContext])
 
     const handleGlobalToggle = (channel) => {
         const key = `${channel}_enabled`
@@ -131,6 +155,13 @@ function NotificationSettings() {
                 <h1>🔔 Настройки уведомлений</h1>
                 <p>Выберите, как и когда получать уведомления</p>
             </div>
+
+            {!apiAvailable && (
+                <div className="offline-notice">
+                    <span>💾</span>
+                    <p>Настройки сохраняются локально. Они будут синхронизированы при восстановлении соединения.</p>
+                </div>
+            )}
 
             {/* Global toggles */}
             <div className="settings-section">

@@ -1,0 +1,182 @@
+.team-member-card {
+    background: #1a1a2e;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: box-shadow 0.2s;
+}
+
+.team-member-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.member-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.member-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.member-avatar span {
+    font-size: 24px;
+    color: #fff;
+}
+
+.member-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.member-name {
+    margin: 0 0 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.member-name a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.member-name a:hover {
+    color: #8b5cf6;
+}
+
+.member-email {
+    color: #888;
+    font-size: 13px;
+    margin: 0 0 8px;
+}
+
+.member-role {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.member-role.owner {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+}
+
+.member-role.admin {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.member-role.manager {
+    background: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+}
+
+.member-role.model {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.member-stats {
+    display: flex;
+    gap: 24px;
+}
+
+.member-stats .stat {
+    text-align: center;
+}
+
+.member-stats .stat-value {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.member-stats .stat-label {
+    font-size: 11px;
+    color: #666;
+}
+
+.member-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.role-select {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.role-select:focus {
+    outline: none;
+    border-color: #8b5cf6;
+}
+
+.remove-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.2);
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.remove-btn:hover {
+    background: rgba(239, 68, 68, 0.3);
+}
+
+.member-joined {
+    font-size: 11px;
+    color: #666;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .team-member-card {
+        flex-wrap: wrap;
+    }
+
+    .member-stats {
+        width: 100%;
+        justify-content: flex-start;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .member-actions {
+        width: 100%;
+        margin-top: 12px;
+    }
+
+    .member-joined {
+        width: 100%;
+        margin-top: 8px;
+    }
+}
