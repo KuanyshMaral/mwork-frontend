@@ -24,6 +24,7 @@ import Subscriptions from './pages/Subscriptions'
 import Checkout from './pages/Checkout'
 import Photostudios from './pages/Photostudios'
 import Advertising from './pages/Advertising'
+import CreatePromotion from './pages/CreatePromotion'
 import Chat from './pages/Chat'
 import CreateCasting from './pages/CreateCasting'
 import MyCastings from './pages/MyCastings'
@@ -127,6 +128,7 @@ function AppRoutes() {
                         <Route path="applications" element={<MyApplications />} />
                         <Route path="photostudios" element={<Photostudios />} />
                         <Route path="advertising" element={<Advertising />} />
+                        <Route path="advertising/create" element={<CreatePromotion />} />
                         <Route path="messages" element={<Chat />} />
                         <Route path="profile" element={<Profile />} />
                         <Route path="profile/edit" element={<ProfileEdit />} />

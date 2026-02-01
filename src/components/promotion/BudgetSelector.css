@@ -1,0 +1,134 @@
+.budget-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.budget-type-selector {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.radio-label:hover {
+    border-color: #4f46e5;
+    background: #f9fafb;
+}
+
+.radio-label input[type="radio"] {
+    margin-right: 0.5rem;
+}
+
+.radio-label input[type="radio"]:checked + .radio-text {
+    color: #4f46e5;
+    font-weight: 500;
+}
+
+.radio-label:has(input:checked) {
+    border-color: #4f46e5;
+    background: #eef2ff;
+}
+
+.budget-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.budget-input-with-presets,
+.duration-input-with-presets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.budget-input-with-presets input,
+.duration-input-with-presets input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.budget-input-with-presets input:focus,
+.duration-input-with-presets input:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.preset-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.preset-btn {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+    color: #6b7280;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.preset-btn:hover {
+    border-color: #4f46e5;
+    color: #4f46e5;
+    background: #f9fafb;
+}
+
+.budget-summary {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.summary-item:last-child {
+    margin-bottom: 0;
+}
+
+.summary-item.total {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 0.75rem;
+    margin-top: 0.75rem;
+    font-weight: 600;
+}
+
+.summary-label {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.summary-value {
+    color: #1f2937;
+    font-weight: 500;
+}
+
+.summary-item.total .summary-value {
+    color: #4f46e5;
+    font-size: 1.125rem;
+}

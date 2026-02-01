@@ -83,6 +83,7 @@ export const profileApi = {
         const queryString = new URLSearchParams(params).toString()
         return api.get(`/profiles/models${queryString ? `?${queryString}` : ''}`)
     },
+    getPromotedModels: () => api.get('/profiles/models/promoted'),
 }
 
 // Casting methods
@@ -152,6 +153,10 @@ export const subscriptionApi = {
 // Promotion API (New namespace)
 export const promotionApi = {
     create: (data) => api.post('/promotions', data),
+    list: (params) => {
+        const queryString = new URLSearchParams(params).toString()
+        return api.get(`/promotions${queryString ? `?${queryString}` : ''}`)
+    },
     activate: (id) => api.post(`/promotions/${id}/activate`),
     pause: (id) => api.post(`/promotions/${id}/pause`),
     getStats: (id) => api.get(`/promotions/${id}/stats`),
