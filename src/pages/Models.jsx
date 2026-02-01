@@ -3,12 +3,15 @@ import { useSearchParams } from 'react-router-dom'
 import { profileApi } from '../api/client'
 import ModelFilters from '../components/models/ModelFilters'
 import ModelCard from '../components/models/ModelCard'
+import PromotedModelBadge from '../components/models/PromotedModelBadge'
 import './Models.css'
 
 export default function Models() {
     const [searchParams] = useSearchParams()
     const [models, setModels] = useState([])
+    const [promotedModels, setPromotedModels] = useState([])
     const [loading, setLoading] = useState(true)
+    const [promotedLoading, setPromotedLoading] = useState(true)
     const [total, setTotal] = useState(0)
     const [pagination, setPagination] = useState({
         page: 1,
@@ -34,18 +37,34 @@ export default function Models() {
     }
 
     useEffect(() => {
+        loadPromotedModels()
         loadModels()
     }, [searchParams])
+
+    async function loadPromotedModels() {
+        setPromotedLoading(true)
+        try {
+            const result = await profileApi.getPromotedModels()
+            setPromotedModels(Array.isArray(result) ? result : (Array.isArray(result?.data) ? result.data : []))
+        } catch (err) {
+            console.error('Failed to load promoted models:', err)
+            // Don't show error for promoted models - just fail silently
+            setPromotedModels([])
+        } finally {
+            setPromotedLoading(false)
+        }
+    }
 
     async function loadModels() {
         setLoading(true)
         try {
             const filters = getFiltersFromParams()
             const result = await profileApi.listModels(filters)
-            setModels(result.data || result || [])
+            const modelsData = Array.isArray(result) ? result : (Array.isArray(result?.data) ? result.data : [])
+            setModels(modelsData)
             
             // Handle pagination metadata
-            if (result.meta) {
+            if (result?.meta) {
                 setPagination({
                     page: result.meta.current_page || 1,
                     limit: result.meta.per_page || 20,
@@ -53,7 +72,7 @@ export default function Models() {
                 })
                 setTotal(result.meta.total || 0)
             } else {
-                setTotal(result.length || 0)
+                setTotal(modelsData.length || 0)
             }
         } catch (err) {
             console.error('Failed to load models:', err)
@@ -63,13 +82,16 @@ export default function Models() {
         }
     }
 
+    const allModels = [...promotedModels.map(model => ({ ...model, is_promoted: true })), ...models]
+    const displayTotal = total + promotedModels.length
+
     return (
         <div className="models-page animate-fadeIn">
             <div className="page-header">
                 <h1>Модели</h1>
                 <p>Найдите идеальную модель для вашего проекта</p>
-                {total > 0 && (
-                    <p className="results-count">Найдено: {total} {total === 1 ? 'модель' : total < 5 ? 'модели' : 'моделей'}</p>
+                {displayTotal > 0 && (
+                    <p className="results-count">Найдено: {displayTotal} {displayTotal === 1 ? 'модель' : displayTotal < 5 ? 'модели' : 'моделей'}</p>
                 )}
             </div>
 
@@ -77,19 +99,19 @@ export default function Models() {
             <ModelFilters />
 
             {/* Models Grid */}
-            {loading ? (
+            {loading || promotedLoading ? (
                 <div className="loading">Загрузка...</div>
             ) : (
                 <>
                     <div className="models-grid">
-                        {models.length === 0 ? (
+                        {allModels.length === 0 ? (
                             <div className="no-results">
                                 <h3>Модели не найдены</h3>
                                 <p>Попробуйте изменить параметры фильтров или поиск</p>
                             </div>
                         ) : (
-                            models.map(model => (
-                                <ModelCard key={model.id} model={model} />
+                            allModels.map(model => (
+                                <ModelCard key={`promoted-${model.id}`} model={model} />
                             ))
                         )}
                     </div>

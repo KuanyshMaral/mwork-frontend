@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import PromotedModelBadge from './PromotedModelBadge'
 import './ModelCard.css'
 
 export default function ModelCard({ model }) {
@@ -50,6 +51,13 @@ export default function ModelCard({ model }) {
                             <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
                             <path d="M10 17l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="white"/>
                         </svg>
+                    </div>
+                )}
+                
+                {/* Promoted Badge */}
+                {model.is_promoted && (
+                    <div className="promoted-model-badge">
+                        <PromotedModelBadge size="small" />
                     </div>
                 )}
             </div>
