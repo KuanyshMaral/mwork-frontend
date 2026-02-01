@@ -3,6 +3,7 @@ import { useChat } from '../context/ChatContext.jsx'
 import { chatApi } from '../api/client'
 import ChatImageUpload from '../components/chat/ChatImageUpload'
 import ReadReceipt from '../components/chat/ReadReceipt'
+import LimitReachedModal from '../components/subscription/LimitReachedModal'
 import './Chat.css'
 
 export default function Chat() {
@@ -20,6 +21,8 @@ export default function Chat() {
 
     const [input, setInput] = useState('')
     const [showMobileSidebar, setShowMobileSidebar] = useState(true)
+    const [showLimitModal, setShowLimitModal] = useState(false)
+    const [limitModalData, setLimitModalData] = useState({})
     const messagesEndRef = useRef(null)
 
     // Scroll to bottom on new messages
@@ -43,6 +46,29 @@ export default function Chat() {
             setInput('')
         } catch (err) {
             console.error('Failed to send:', err)
+            
+            // Handle 429 Too Many Requests (limit reached)
+            if (err.status === 429) {
+                const limitData = err.data || {}
+                setLimitModalData({
+                    limitType: 'messages',
+                    currentUsage: limitData.current_usage || 0,
+                    limit: limitData.limit || 0,
+                    upgradeTo: limitData.upgrade_to_plan_id,
+                    planInfo: limitData.recommended_plan
+                })
+                setShowLimitModal(true)
+                return
+            }
+            
+            // Handle other errors
+            if (err.message?.includes('room not found')) {
+                alert('Чат не найден')
+            } else if (err.message?.includes('permission denied')) {
+                alert('Нет доступа к этому чату')
+            } else {
+                alert(err.message || 'Ошибка при отправке сообщения')
+            }
         }
     }
 
@@ -209,6 +235,18 @@ export default function Chat() {
                     </>
                 )}
             </main>
+
+            {/* Limit Reached Modal */}
+            {showLimitModal && (
+                <LimitReachedModal
+                    onClose={() => setShowLimitModal(false)}
+                    limitType={limitModalData.limitType}
+                    currentUsage={limitModalData.currentUsage}
+                    limit={limitModalData.limit}
+                    upgradeTo={limitModalData.upgradeTo}
+                    planInfo={limitModalData.planInfo}
+                />
+            )}
         </div>
     )
 }

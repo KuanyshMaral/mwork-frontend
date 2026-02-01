@@ -1,0 +1,289 @@
+.subscription-management {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.page-header {
+    margin-bottom: 32px;
+}
+
+.page-header h1 {
+    margin: 0 0 8px;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.page-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 1rem;
+}
+
+.current-plan-badge {
+    margin-bottom: 24px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.badge-primary {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.no-subscription {
+    text-align: center;
+    padding: 64px 24px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+.no-subscription-icon {
+    font-size: 4rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.no-subscription h3 {
+    margin: 0 0 8px;
+    font-size: 1.5rem;
+    color: #111827;
+}
+
+.no-subscription p {
+    margin: 0 0 24px;
+    color: #6b7280;
+}
+
+.subscription-overview {
+    margin-bottom: 32px;
+    padding: 24px;
+}
+
+.subscription-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    gap: 24px;
+}
+
+.subscription-header > div {
+    flex: 1;
+}
+
+.subscription-header h2 {
+    margin: 0 0 8px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.subscription-price {
+    text-align: right;
+}
+
+.price-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111827;
+    display: block;
+}
+
+.price-period {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.subscription-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detail-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.detail-value {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827;
+}
+
+.subscription-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.usage-section {
+    margin-bottom: 32px;
+}
+
+.usage-section h3 {
+    margin: 0 0 16px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.usage-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.usage-item {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.usage-label {
+    display: block;
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 8px;
+}
+
+.usage-count {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #2563eb;
+}
+
+.btn-outline-danger {
+    background: white;
+    color: #dc2626;
+    border-color: #dc2626;
+}
+
+.btn-outline-danger:hover:not(:disabled) {
+    background: #fef2f2;
+    border-color: #b91c1c;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.badge-danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.badge-secondary {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.badge-warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.loading {
+    text-align: center;
+    padding: 48px;
+    color: #6b7280;
+}
+
+@media (max-width: 768px) {
+    .subscription-management {
+        padding: 16px;
+    }
+    
+    .subscription-header {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .subscription-price {
+        text-align: left;
+    }
+    
+    .subscription-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .usage-grid {
+        grid-template-columns: 1fr;
+    }
+}

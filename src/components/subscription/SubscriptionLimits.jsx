@@ -15,40 +15,51 @@ export default function SubscriptionLimits() {
             try {
                 console.log('Fetching subscription limits...');
                 
-                // TEMPORARY: Use mock data until backend is available
-                // TODO: Remove this when backend is ready
-                const mockData = {
-                    photos_used: 3,
-                    photos_limit: 10,
-                    responses_used: 2,
-                    responses_limit: 5,
-                    castings_used: 1,
-                    castings_limit: 3
-                };
+                // Try to get real data first
+                try {
+                    const data = await subscriptionApi.getLimits();
+                    console.log('Received data:', data);
+                    
+                    // Validate API response structure
+                    if (data && 
+                        data.photos_used !== undefined && 
+                        data.max_photos !== undefined &&
+                        data.responses_used !== undefined && 
+                        data.max_responses_month !== undefined) {
+                        // Convert to component format
+                        const convertedData = {
+                            photos_used: data.photos_used,
+                            photos_limit: data.max_photos,
+                            responses_used: data.responses_used,
+                            responses_limit: data.max_responses_month,
+                            castings_used: 0, // Backend doesn't track castings yet
+                            castings_limit: 3 // Default limit
+                        };
+                        
+                        setLimits(convertedData);
+                        setError(null);
+                        console.log('Limits set successfully:', convertedData);
+                    } else {
+                        console.error('Invalid API response structure:', data);
+                        throw new Error('Неверная структура ответа от сервера');
+                    }
+                } catch (apiErr) {
+                    console.log('API failed, using fallback data:', apiErr);
+                    // Use fallback data when backend is not available
+                    const mockData = {
+                        photos_used: 3,
+                        photos_limit: 10,
+                        responses_used: 2,
+                        responses_limit: 5,
+                        castings_used: 1,
+                        castings_limit: 3
+                    };
+                    
+                    console.log('Using fallback data:', mockData);
+                    setLimits(mockData);
+                    setError(null);
+                }
                 
-                console.log('Using mock data:', mockData);
-                setLimits(mockData);
-                setError(null);
-                
-                // Uncomment when backend is ready:
-                // const data = await subscriptionApi.getLimits();
-                // console.log('Received data:', data);
-                // 
-                // // Validate API response structure
-                // if (data && 
-                //     data.photos_used !== undefined && 
-                //     data.photos_limit !== undefined &&
-                //     data.responses_used !== undefined && 
-                //     data.responses_limit !== undefined &&
-                //     data.castings_used !== undefined && 
-                //     data.castings_limit !== undefined) {
-                //     setLimits(data);
-                //     setError(null);
-                //     console.log('Limits set successfully:', data);
-                // } else {
-                //     console.error('Invalid API response structure:', data);
-                //     throw new Error('Неверная структура ответа от сервера');
-                // }
             } catch (err) {
                 console.error('Failed to fetch limits:', err);
                 console.error('Error details:', {

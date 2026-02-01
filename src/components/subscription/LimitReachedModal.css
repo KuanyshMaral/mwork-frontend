@@ -1,0 +1,263 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.limit-reached-modal {
+    background: white;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 24px 0;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 20px;
+}
+
+.limit-icon {
+    font-size: 2rem;
+    margin-right: 12px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #6b7280;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.modal-body {
+    padding: 0 24px 24px;
+}
+
+.limit-info {
+    margin-bottom: 24px;
+}
+
+.limit-info p {
+    margin: 0 0 16px;
+    color: #374151;
+    line-height: 1.5;
+}
+
+.usage-bar {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.usage-label {
+    display: block;
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 8px;
+}
+
+.progress-container {
+    background: #e5e7eb;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+    transition: width 0.3s ease;
+}
+
+.progress-bar.over-limit {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.upgrade-section {
+    background: #f0f9ff;
+    border: 1px solid #0ea5e9;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.upgrade-section h4 {
+    margin: 0 0 16px;
+    color: #0c4a6e;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.plan-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.plan-price {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.price-amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.price-period {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.plan-features {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+.feature-icon {
+    color: #059669;
+    font-weight: bold;
+}
+
+.benefits-section h4 {
+    margin: 0 0 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.benefits-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.benefits-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.benefits-list li::before {
+    content: "✓";
+    color: #059669;
+    font-weight: bold;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding: 16px 24px;
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: white;
+    color: #374151;
+    border-color: #d1d5db;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.btn-primary {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #2563eb;
+}
+
+@media (max-width: 640px) {
+    .modal-overlay {
+        padding: 16px;
+    }
+    
+    .limit-reached-modal {
+        max-height: 95vh;
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}

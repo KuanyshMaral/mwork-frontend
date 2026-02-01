@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { castingApi, responseApi } from '../api/client'
+import { castingApi, responseApi, subscriptionApi } from '../api/client'
 import { useAuth } from '../hooks/useAuth.jsx'
+import LimitReachedModal from '../components/subscription/LimitReachedModal'
 import './CastingDetail.css'
 
 export default function CastingDetail() {
@@ -14,6 +15,8 @@ export default function CastingDetail() {
     const [applying, setApplying] = useState(false)
     const [applied, setApplied] = useState(false)
     const [applyError, setApplyError] = useState(null)
+    const [showLimitModal, setShowLimitModal] = useState(false)
+    const [limitModalData, setLimitModalData] = useState({})
 
     useEffect(() => {
         loadCasting()
@@ -43,6 +46,21 @@ export default function CastingDetail() {
             setApplied(true)
         } catch (err) {
             console.error('Apply error:', err)
+            
+            // Handle 429 Too Many Requests (limit reached)
+            if (err.status === 429) {
+                const limitData = err.data || {}
+                setLimitModalData({
+                    limitType: 'responses',
+                    currentUsage: limitData.current_usage || 0,
+                    limit: limitData.limit || 0,
+                    upgradeTo: limitData.upgrade_to_plan_id,
+                    planInfo: limitData.recommended_plan
+                })
+                setShowLimitModal(true)
+                return
+            }
+            
             // Handle specific errors
             if (err.message?.includes('already applied')) {
                 setApplied(true)
@@ -173,6 +191,18 @@ export default function CastingDetail() {
                     </div>
                 </div>
             </div>
+
+            {/* Limit Reached Modal */}
+            {showLimitModal && (
+                <LimitReachedModal
+                    onClose={() => setShowLimitModal(false)}
+                    limitType={limitModalData.limitType}
+                    currentUsage={limitModalData.currentUsage}
+                    limit={limitModalData.limit}
+                    upgradeTo={limitModalData.upgradeTo}
+                    planInfo={limitModalData.planInfo}
+                />
+            )}
         </div>
     )
 }

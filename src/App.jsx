@@ -38,6 +38,7 @@ import Layout from './components/layout/Layout'
 
 // Settings (lazy loaded)
 const NotificationSettings = lazy(() => import('./pages/settings/NotificationSettings'))
+const SubscriptionManagement = lazy(() => import('./pages/settings/SubscriptionManagement'))
 
 // Admin (lazy loaded)
 const AdminLayout = lazy(() => import('./components/admin/AdminLayout'))
@@ -139,6 +140,11 @@ function AppRoutes() {
                         <Route path="settings/notifications" element={
                             <Suspense fallback={<div className="loading">Загрузка...</div>}>
                                 <NotificationSettings />
+                            </Suspense>
+                        } />
+                        <Route path="settings/subscription" element={
+                            <Suspense fallback={<div className="loading">Загрузка...</div>}>
+                                <SubscriptionManagement />
                             </Suspense>
                         } />
 
