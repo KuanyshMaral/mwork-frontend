@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './hooks/useAuth.jsx'
+import { AdminAuthProvider, useAdminAuth } from './hooks/useAdminAuth.jsx'
 import { ChatProvider } from './context/ChatContext.jsx'
 import { NotificationProvider } from './context/NotificationContext.jsx'
 import NotificationToast from './components/notifications/NotificationToast'
@@ -9,6 +10,7 @@ import NotificationToast from './components/notifications/NotificationToast'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import EmployerRegister from './pages/EmployerRegister'
 import VerifyEmail from './pages/VerifyEmail'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
@@ -35,6 +37,8 @@ import PaymentRedirect from './components/payment/PaymentRedirect'
 
 // Layout
 import Layout from './components/layout/Layout'
+import EmployerGuard from './components/EmployerGuard'
+import EmployerPendingStatus from './components/EmployerPendingStatus'
 
 // Settings (lazy loaded)
 const NotificationSettings = lazy(() => import('./pages/settings/NotificationSettings'))
@@ -47,6 +51,7 @@ const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'))
 const AdminLeads = lazy(() => import('./pages/admin/Leads'))
 const AdminLeadDetail = lazy(() => import('./pages/admin/LeadDetail'))
 const AdminModeration = lazy(() => import('./pages/admin/Moderation'))
+const EmployerModeration = lazy(() => import('./pages/admin/EmployerModeration'))
 const AdminUsers = lazy(() => import('./pages/admin/Users'))
 const AdminReports = lazy(() => import('./pages/admin/Reports'))
 const AdminFinance = lazy(() => import('./pages/admin/Finance'))
@@ -75,8 +80,8 @@ function ProtectedRoute({ children }) {
     return children
 }
 
-// Admin Guard
-function AdminGuard({ children }) {
+// Employer Protected Route wrapper (checks employer status)
+function EmployerProtectedRoute({ children }) {
     const { user, loading } = useAuth()
 
     if (loading) {
@@ -84,11 +89,31 @@ function AdminGuard({ children }) {
     }
 
     if (!user) {
+        return <Navigate to="/login" replace />
+    }
+
+    // If user is employer with non-verified status, show pending screen
+    if (user.role === 'employer' && user.user_verification_status !== 'verified') {
+        return <EmployerPendingStatus />
+    }
+
+    return children
+}
+
+// Admin Guard
+function AdminGuard({ children }) {
+    const { adminUser, loading } = useAdminAuth()
+
+    if (loading) {
+        return <div className="loading">Загрузка...</div>
+    }
+
+    if (!adminUser) {
         return <Navigate to="/admin/login" replace />
     }
 
     const adminRoles = ['admin', 'super_admin', 'moderator', 'support']
-    if (!adminRoles.includes(user.role)) {
+    if (!adminRoles.includes(adminUser.role)) {
         return <Navigate to="/dashboard" replace />
     }
 
@@ -105,6 +130,7 @@ function AppRoutes() {
                     <Route path="/" element={<Landing />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/register-employer" element={<EmployerRegister />} />
                     <Route path="/verify-email" element={<ProtectedRoute><VerifyEmail /></ProtectedRoute>} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
@@ -121,9 +147,21 @@ function AppRoutes() {
                     <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
                         <Route path="dashboard" element={<Dashboard />} />
                         <Route path="castings" element={<Castings />} />
-                        <Route path="castings/create" element={<CreateCasting />} />
-                        <Route path="castings/edit/:id" element={<CreateCasting />} />
-                        <Route path="castings/my" element={<MyCastings />} />
+                        <Route path="castings/create" element={
+                            <EmployerProtectedRoute>
+                                <CreateCasting />
+                            </EmployerProtectedRoute>
+                        } />
+                        <Route path="castings/edit/:id" element={
+                            <EmployerProtectedRoute>
+                                <CreateCasting />
+                            </EmployerProtectedRoute>
+                        } />
+                        <Route path="castings/my" element={
+                            <EmployerProtectedRoute>
+                                <MyCastings />
+                            </EmployerProtectedRoute>
+                        } />
                         <Route path="castings/:id" element={<CastingDetail />} />
                         <Route path="models" element={<Models />} />
                         <Route path="applications" element={<MyApplications />} />
@@ -148,11 +186,13 @@ function AppRoutes() {
                             </Suspense>
                         } />
 
-                        {/* Employer Dashboard */}
+                        {/* Employer Dashboard - only for approved employers */}
                         <Route path="employer" element={
-                            <Suspense fallback={<div className="loading">Загрузка...</div>}>
-                                <EmployerDashboard />
-                            </Suspense>
+                            <EmployerProtectedRoute>
+                                <Suspense fallback={<div className="loading">Загрузка...</div>}>
+                                    <EmployerDashboard />
+                                </Suspense>
+                            </EmployerProtectedRoute>
                         } />
 
                         {/* Agency routes */}
@@ -189,15 +229,18 @@ function AppRoutes() {
 
                     <Route path="/admin" element={
                         <Suspense fallback={<div className="loading">Загрузка...</div>}>
-                            <AdminGuard>
-                                <AdminLayout />
-                            </AdminGuard>
+                            <AdminAuthProvider>
+                                <AdminGuard>
+                                    <AdminLayout />
+                                </AdminGuard>
+                            </AdminAuthProvider>
                         </Suspense>
                     }>
                         <Route index element={<AdminDashboard />} />
                         <Route path="leads" element={<AdminLeads />} />
                         <Route path="leads/:id" element={<AdminLeadDetail />} />
                         <Route path="moderation" element={<AdminModeration />} />
+                        <Route path="employers" element={<EmployerModeration />} />
                         <Route path="users" element={<AdminUsers />} />
                         <Route path="reports" element={<AdminReports />} />
                         <Route path="finance" element={<AdminFinance />} />

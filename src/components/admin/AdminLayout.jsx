@@ -15,6 +15,7 @@ function AdminLayout() {
         { path: '/admin', label: 'Дашборд', icon: '📊', exact: true },
         { path: '/admin/leads', label: 'Заявки', icon: '📋' },
         { path: '/admin/users', label: 'Пользователи', icon: '👥' },
+        { path: '/admin/employers', label: 'Работодатели', icon: '🏢' },
         { path: '/admin/moderation', label: 'Модерация', icon: '🔍' },
         { path: '/admin/castings', label: 'Кастинги', icon: '🎬' },
         { path: '/admin/payments', label: 'Платежи', icon: '💳' },

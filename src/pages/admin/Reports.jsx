@@ -46,7 +46,11 @@ export default function AdminReports() {
 
         try {
             setResolvingId(reportId);
-            await adminApi.resolveReport(reportId, { action });
+            await adminApi.updateReportStatus(reportId, { 
+                status: action === 'dismiss' ? 'dismissed' : 
+                       action === 'warn' ? 'warned' : 
+                       action === 'suspend' ? 'suspended' : 'resolved'
+            });
             
             setReports(prev => prev.filter(report => report.id !== reportId));
             

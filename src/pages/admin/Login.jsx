@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import api from '../../api/client'
+import { authApi } from '../../api/client'
 import './AdminLogin.css'
 
 function AdminLogin() {
@@ -16,15 +16,20 @@ function AdminLogin() {
         setLoading(true)
 
         try {
-            const response = await api.post('/admin/auth/login', { email, password })
+            const response = await authApi.adminLogin({ email, password })
 
-            // Store admin token
-            localStorage.setItem('admin_token', response.data.token)
-            localStorage.setItem('admin_user', JSON.stringify(response.data.admin))
+            // Store admin token and user data
+            localStorage.setItem('admin_token', response.Token || response.access_token || response.token)
+            localStorage.setItem('admin_user', JSON.stringify(response.Admin || response.admin || response))
 
             navigate('/admin')
         } catch (err) {
-            setError(err.response?.data?.error?.message || 'Ошибка авторизации')
+            console.error('Admin login error:', err)
+            if (err.message.includes('Invalid JSON response')) {
+                setError('Сервер вернул некорректный ответ. Проверьте, запущен ли backend.')
+            } else {
+                setError(err.message || 'Ошибка авторизации')
+            }
         } finally {
             setLoading(false)
         }
@@ -60,9 +65,13 @@ function AdminLogin() {
                             type="password"
                             value={password}
                             onChange={e => setPassword(e.target.value)}
-                            placeholder="••••••••"
+                            placeholder="admin123"
                             required
                         />
+                    </div>
+
+                    <div className="admin-login-hint">
+                        <small>Демо доступ: admin@mwork.kz / admin123</small>
                     </div>
 
                     <button

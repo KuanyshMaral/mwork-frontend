@@ -2,6 +2,9 @@
 
 const API_BASE = '/api/v1'
 
+// Admin API base path (different from regular API)
+const ADMIN_API_BASE = '/api/admin'
+
 class ApiError extends Error {
     constructor(message, status, data) {
         super(message)
@@ -11,7 +14,10 @@ class ApiError extends Error {
 }
 
 async function request(endpoint, options = {}) {
-    const token = localStorage.getItem('token')
+    // Check if this is an admin endpoint and use admin token and base path
+    const isAdminEndpoint = endpoint.startsWith('/admin/') || options._useAdminBase
+    const token = localStorage.getItem(isAdminEndpoint ? 'admin_token' : 'token')
+    const basePath = isAdminEndpoint ? ADMIN_API_BASE : API_BASE
 
     const config = {
         headers: {
@@ -22,20 +28,77 @@ async function request(endpoint, options = {}) {
         ...options,
     }
 
+    // Remove internal flags
+    delete config._useAdminBase
+
     if (options.body && typeof options.body === 'object') {
         config.body = JSON.stringify(options.body)
     }
 
-    const response = await fetch(`${API_BASE}${endpoint}`, config)
+    const response = await fetch(`${basePath}${endpoint}`, config)
 
     // Handle 204 No Content
     if (response.status === 204) {
         return null
     }
 
-    const data = await response.json()
+    const responseText = await response.text()
+    
+    // Debug logging for admin endpoints
+    if (isAdminEndpoint) {
+        console.log('Admin API Response:', {
+            url: `${basePath}${endpoint}`,
+            status: response.status,
+            statusText: response.statusText,
+            headers: Object.fromEntries(response.headers.entries()),
+            responseText: responseText.substring(0, 500)
+        })
+    }
+    
+    // Try to parse as JSON, fallback to text if it fails
+    let data
+    try {
+        data = responseText ? JSON.parse(responseText) : {}
+    } catch (e) {
+        console.error('Invalid JSON response:', {
+            url: `${basePath}${endpoint}`,
+            status: response.status,
+            responseText: responseText.substring(0, 1000)
+        })
+        throw new ApiError(
+            `Invalid JSON response from server (${response.status}): ${responseText.substring(0, 200)}`,
+            response.status,
+            { rawResponse: responseText }
+        )
+    }
 
     if (!response.ok) {
+        // Handle auth errors with proper redirects
+        if (response.status === 401) {
+            if (isAdminEndpoint) {
+                // Clear admin token and redirect to admin login
+                localStorage.removeItem('admin_token')
+                localStorage.removeItem('admin_user')
+                if (typeof window !== 'undefined') {
+                    window.location.href = '/admin/login'
+                }
+            } else {
+                // Clear user token and redirect to regular login
+                localStorage.removeItem('token')
+                localStorage.removeItem('refreshToken')
+                if (typeof window !== 'undefined') {
+                    window.location.href = '/login'
+                }
+            }
+        } else if (response.status === 403) {
+            // Access denied - show proper error
+            if (isAdminEndpoint) {
+                throw new ApiError('Access denied - Admin privileges required', response.status, data)
+            } else {
+                throw new ApiError('Access denied - Not admin', response.status, data)
+            }
+        }
+        
         throw new ApiError(
             data.error?.message || data.message || 'Произошла ошибка',
             response.status,
@@ -59,6 +122,19 @@ const api = {
     delete: (endpoint) => request(endpoint, { method: 'DELETE' }),
 }
 
+// Admin API convenience methods (use admin base path)
+const adminApiBase = {
+    get: (endpoint) => request(endpoint, { method: 'GET', _useAdminBase: true }),
+
+    post: (endpoint, body) => request(endpoint, { method: 'POST', body, _useAdminBase: true }),
+
+    put: (endpoint, body) => request(endpoint, { method: 'PUT', body, _useAdminBase: true }),
+
+    patch: (endpoint, body) => request(endpoint, { method: 'PATCH', body, _useAdminBase: true }),
+
+    delete: (endpoint) => request(endpoint, { method: 'DELETE', _useAdminBase: true }),
+}
+
 // Auth-specific methods
 export const authApi = {
     register: (data) => api.post('/auth/register', data),
@@ -66,6 +142,11 @@ export const authApi = {
     logout: (data) => api.post('/auth/logout', data),
     refresh: (data) => api.post('/auth/refresh', data),
     me: () => api.get('/auth/me'),
+    
+    // Admin auth methods
+    adminLogin: (data) => adminApiBase.post('/auth/login', data),
+    adminLogout: (data) => adminApiBase.post('/auth/logout', data),
+    adminMe: () => adminApiBase.get('/auth/me'),
 }
 
 // Profile methods
@@ -76,6 +157,7 @@ export const profileApi = {
     getCompleteness: (id) => api.get(`/profiles/${id}/completeness`),
     getSocialLinks: (id) => api.get(`/profiles/${id}/social-links`),
     addSocialLink: (id, data) => api.post(`/profiles/${id}/social-links`, data),
+    createEmployerProfile: (data) => api.post('/profiles/employers', data),
     deleteSocialLink: (id, platform) => api.delete(`/profiles/${id}/social-links/${platform}`),
     createModel: (data) => api.post('/profiles/models', data),
     createEmployer: (data) => api.post('/profiles/employers', data),
@@ -414,13 +496,14 @@ export const responseApi = {
 }
 
 
-// Admin API (new namespace)
+// Admin API (matches backend routes exactly)
 export const adminApi = {
     /**
      * Get admin dashboard statistics
-     * @returns {Promise<{total_users, total_castings, active_subscriptions, pending_payments, pending_reports}>}
+     * Uses /api/admin/analytics/dashboard endpoint
+     * @returns {Promise<{dashboard_stats}>}
      */
-    getStats: () => api.get('/admin/stats'),
+    getStats: () => adminApiBase.get('/analytics/dashboard'),
 
     /**
      * List moderation reports
@@ -429,25 +512,25 @@ export const adminApi = {
      */
     listReports: (params = {}) => {
         const queryString = new URLSearchParams(params).toString();
-        return api.get(`/admin/reports?${queryString}`);
+        return adminApiBase.get(`/reports${queryString ? `?${queryString}` : ''}`);
     },
 
     /**
-     * Resolve moderation report
+     * Update report status (PATCH /admin/reports/{id}/status)
      * @param {string} reportId
-     * @param {Object} data - {action: 'warn'|'suspend'|'delete'|'dismiss', notes}
+     * @param {Object} data - {status, notes?}
      * @returns {Promise<{status}>}
      */
-    resolveReport: (reportId, data) => api.post(`/admin/reports/${reportId}/resolve`, data),
+    updateReportStatus: (reportId, data) => adminApiBase.patch(`/reports/${reportId}/status`, data),
 
     /**
      * Get revenue analytics
      * @param {Object} params - {period: 'day'|'week'|'month'|'year'}
-     * @returns {Promise<{total_revenue, chart_data, top_spenders}>}
+     * @returns {Promise<{revenue_data}>}
      */
     getRevenue: (params = {}) => {
         const queryString = new URLSearchParams(params).toString();
-        return api.get(`/admin/analytics/revenue${queryString ? `?${queryString}` : ''}`);
+        return adminApiBase.get(`/analytics/revenue${queryString ? `?${queryString}` : ''}`);
     },
 
     /**
@@ -457,7 +540,7 @@ export const adminApi = {
      */
     listUsers: (params = {}) => {
         const queryString = new URLSearchParams(params).toString();
-        return api.get(`/admin/users?${queryString}`);
+        return adminApiBase.get(`/users?${queryString}`);
     },
 
     /**
@@ -465,26 +548,47 @@ export const adminApi = {
      * @param {string} userId
      * @returns {Promise<User>}
      */
-    getUserById: (userId) => api.get(`/admin/users/${userId}`),
+    getUserById: (userId) => adminApiBase.get(`/users/${userId}`),
 
     /**
      * Ban user
      * @param {string} userId
      * @param {Object} data - {reason}
      */
-    banUser: (userId, data) => api.post(`/admin/users/${userId}/ban`, data),
+    banUser: (userId, data) => adminApiBase.post(`/users/${userId}/ban`, data),
 
     /**
      * Unban user
      * @param {string} userId
      */
-    unbanUser: (userId) => api.post(`/admin/users/${userId}/unban`),
+    unbanUser: (userId) => adminApiBase.post(`/users/${userId}/unban`),
+
+    /**
+     * Update user status
+     * @param {string} userId
+     * @param {string} status - new status value
+     * @param {string} reason - optional rejection reason
+     */
+    updateUserStatus: (userId, status, reason) => {
+        const payload = { status }
+        if (reason) {
+            payload.reason = reason
+        }
+        return adminApiBase.patch(`/users/${userId}/status`, payload)
+    },
 
     /**
      * Verify user email
      * @param {string} userId
      */
-    verifyUser: (userId) => api.post(`/admin/users/${userId}/verify`),
+    verifyUser: (userId) => adminApiBase.post(`/users/${userId}/verify`),
+
+    /**
+     * Execute SQL query for admin operations (temporary solution)
+     * @param {string} query - SQL query to execute
+     * @returns {Promise<{result}>}
+     */
+    executeSql: (query) => adminApiBase.post('/admin/sql', { query }),
 };
 
 // Upload API (new namespace)
