@@ -32,8 +32,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=latest
+          tags: type=raw,value=latest
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -50,17 +49,20 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            # Логинимся в реестр на сервере
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
             
-            # Скачиваем новый образ
+            # Скачиваем новый образ фронта
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             
-            # Переходим в папку с docker-compose (УТОЧНИТЬ ПУТЬ У БЕКЗАТА!)
-            cd /srv/apps/mwork-backend 
+            # Идем в папку БЭКЕНДА (там лежит docker-compose.yml)
+            cd /srv/apps/mwork-backend
             
-            # Перезапускаем только фронтенд (УТОЧНИТЬ ИМЯ СЕРВИСА!)
-            # Обычно это web, frontend или client. Ниже пример для имени "web":
+            # --- ОБЯЗАТЕЛЬНО: Обновляем docker-compose.yml ---
+            # Чтобы сервер увидел новый сервис "web", который мы туда прописали
+            git reset --hard
+            git pull origin main
+            
+            # Пересоздаем только сервис web
             docker compose up -d --no-deps --build web
             
             # Чистим старые образы
