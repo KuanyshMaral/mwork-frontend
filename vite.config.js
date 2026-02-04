@@ -13,6 +13,12 @@ export default defineConfig({
       template: 'treemap'
     })
   ],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.js'],
+    css: true
+  },
   server: {
     port: 5173,
     host: true,
