@@ -236,14 +236,14 @@ function AppRoutes() {
                             </AdminAuthProvider>
                         </Suspense>
                     }>
-                        <Route index element={<AdminDashboard />} />
-                        <Route path="leads" element={<AdminLeads />} />
-                        <Route path="leads/:id" element={<AdminLeadDetail />} />
-                        <Route path="moderation" element={<AdminModeration />} />
-                        <Route path="employers" element={<EmployerModeration />} />
-                        <Route path="users" element={<AdminUsers />} />
-                        <Route path="reports" element={<AdminReports />} />
-                        <Route path="finance" element={<AdminFinance />} />
+                        <Route index element={<Suspense fallback={<div className="loading">Загрузка...</div>}><AdminDashboard /></Suspense>} />
+                        <Route path="leads" element={<Suspense fallback={<div className="loading">Загрузка...</div>}><AdminLeads /></Suspense>} />
+                        <Route path="leads/:id" element={<Suspense fallback={<div className="loading">Загрузка...</div>}><AdminLeadDetail /></Suspense>} />
+                        <Route path="moderation" element={<Suspense fallback={<div className="loading">Загрузка...</div>}><AdminModeration /></Suspense>} />
+                        <Route path="employers" element={<Suspense fallback={<div className="loading">Загрузка...</div>}><EmployerModeration /></Suspense>} />
+                        <Route path="users" element={<Suspense fallback={<div className="loading">Загрузка...</div>}><AdminUsers /></Suspense>} />
+                        <Route path="reports" element={<Suspense fallback={<div className="loading">Загрузка...</div>}><AdminReports /></Suspense>} />
+                        <Route path="finance" element={<Suspense fallback={<div className="loading">Загрузка...</div>}><AdminFinance /></Suspense>} />
                     </Route>
 
                     {/* 404 */}
