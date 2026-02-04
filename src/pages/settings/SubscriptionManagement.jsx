@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { subscriptionApi } from '../../api/client'
 import { useAuth } from '../../hooks/useAuth.jsx'
-import BillingHistory from '../subscription/BillingHistory'
-import CancelSubscriptionModal from '../subscription/CancelSubscriptionModal'
+import BillingHistory from '../../components/subscription/BillingHistory'
+import CancelSubscriptionModal from '../../components/subscription/CancelSubscriptionModal'
 import './SubscriptionManagement.css'
 
 export default function SubscriptionManagement() {
