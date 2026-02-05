@@ -2,13 +2,17 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { castingApi, responseApi, subscriptionApi } from '../api/client'
 import { useAuth } from '../hooks/useAuth.jsx'
+import { useCredits } from '../context/CreditsContext'
 import LimitReachedModal from '../components/subscription/LimitReachedModal'
+import ApplyCreditConfirmModal from '../components/credits/ApplyCreditConfirmModal'
+import InsufficientCreditsModal from '../components/credits/InsufficientCreditsModal'
 import './CastingDetail.css'
 
 export default function CastingDetail() {
     const { id } = useParams()
     const navigate = useNavigate()
     const { user } = useAuth()
+    const { balance, hasEnoughCredits, deductCredits, getPreventionFlag, setPreventionFlag } = useCredits()
 
     const [casting, setCasting] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -17,6 +21,11 @@ export default function CastingDetail() {
     const [applyError, setApplyError] = useState(null)
     const [showLimitModal, setShowLimitModal] = useState(false)
     const [limitModalData, setLimitModalData] = useState({})
+    const [showConfirmModal, setShowConfirmModal] = useState(false)
+    const [showInsufficientModal, setShowInsufficientModal] = useState(false)
+    const [successMessage, setSuccessMessage] = useState(null)
+    
+    const CREDIT_COST = 1
 
     useEffect(() => {
         loadCasting()
@@ -24,6 +33,48 @@ export default function CastingDetail() {
 
     async function loadCasting() {
         try {
+            // For demo castings, use demo data
+            if (id.startsWith('demo-')) {
+                console.log('Loading demo casting:', id)
+                const demoCasting = {
+                    id: id,
+                    title: id === 'demo-1' ? 'Модель для рекламной кампании' :
+                           id === 'demo-2' ? 'Фотосессия для lookbook' :
+                           'Съемки для музыкального клипа',
+                    description: id === 'demo-1' ? 'Ищем модель для съемок в рекламной кампании известного бренда. Опыт приветствуется.' :
+                               id === 'demo-2' ? 'Нужны модели для создания lookbook нового сезона одежды. Уникальная возможность!' :
+                               'Требуются актеры и модели для съемок в музыкальном клипе. Интересный проект!',
+                    city: id === 'demo-1' ? 'Алматы' :
+                          id === 'demo-2' ? 'Астана' :
+                          'Алматы',
+                    payment_amount: id === 'demo-1' ? 150000 :
+                                   id === 'demo-2' ? 75000 :
+                                   50000,
+                    payment_type: id === 'demo-1' ? 'fixed' :
+                                  id === 'demo-2' ? 'fixed' :
+                                  'negotiable',
+                    gender: id === 'demo-1' ? 'female' :
+                           id === 'demo-2' ? 'any' :
+                           'male',
+                    age_min: id === 'demo-1' ? 18 :
+                               id === 'demo-2' ? 16 :
+                               20,
+                    age_max: id === 'demo-1' ? 25 :
+                               id === 'demo-2' ? 30 :
+                               35,
+                    views_count: id === 'demo-1' ? 245 :
+                                  id === 'demo-2' ? 189 :
+                                  156,
+                    created_at: id === 'demo-1' ? new Date().toISOString() :
+                                 id === 'demo-2' ? new Date(Date.now() - 86400000).toISOString() :
+                                 new Date(Date.now() - 172800000).toISOString(),
+                    is_urgent: id === 'demo-1'
+                }
+                setCasting(demoCasting)
+                setLoading(false)
+                return
+            }
+            
             const data = await castingApi.getById(id)
             setCasting(data)
         } catch (err) {
@@ -39,13 +90,66 @@ export default function CastingDetail() {
             return
         }
 
+        // Pre-apply balance check
+        if (!hasEnoughCredits(CREDIT_COST)) {
+            setShowInsufficientModal(true)
+            return
+        }
+
+        // Show prevention warning if user has seen insufficient modal before
+        if (getPreventionFlag() && balance < CREDIT_COST * 2) {
+            setShowInsufficientModal(true)
+            return
+        }
+
+        // Show confirmation modal
+        setShowConfirmModal(true)
+    }
+
+    async function confirmApply() {
         setApplying(true)
         setApplyError(null)
+        setSuccessMessage(null)
+        
         try {
+            // For demo castings, simulate successful application
+            if (id.startsWith('demo-')) {
+                console.log('Simulating application for demo casting')
+                
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 1000))
+                
+                // Deduct credits on successful application
+                deductCredits(CREDIT_COST)
+                
+                setApplied(true)
+                setSuccessMessage(`Отклик отправлен! Осталось кредитов: ${balance - CREDIT_COST}`)
+                
+                // Clear success message after 5 seconds
+                setTimeout(() => setSuccessMessage(null), 5000)
+                return
+            }
+            
             await responseApi.apply(id)
+            
+            // Deduct credits on successful application
+            deductCredits(CREDIT_COST)
+            
             setApplied(true)
+            setSuccessMessage(`Отклик отправлен! Осталось кредитов: ${balance - CREDIT_COST}`)
+            
+            // Clear success message after 5 seconds
+            setTimeout(() => setSuccessMessage(null), 5000)
+            
         } catch (err) {
             console.error('Apply error:', err)
+            
+            // Handle typed errors
+            if (err.type === 'INSUFFICIENT_CREDITS') {
+                setShowInsufficientModal(true)
+                setPreventionFlag()
+                return
+            }
             
             // Handle 429 Too Many Requests (limit reached)
             if (err.status === 429) {
@@ -62,13 +166,13 @@ export default function CastingDetail() {
             }
             
             // Handle specific errors
-            if (err.message?.includes('already applied')) {
+            if (err.type === 'ALREADY_APPLIED' || err.message?.includes('already applied')) {
                 setApplied(true)
-            } else if (err.message?.includes('profile')) {
+            } else if (err.type === 'PROFILE_REQUIRED' || err.message?.includes('profile')) {
                 setApplyError('Сначала создайте профиль')
             } else if (err.message?.includes('model')) {
                 setApplyError('Только модели могут откликаться')
-            } else if (err.message?.includes('not active')) {
+            } else if (err.type === 'CASTING_CLOSED' || err.message?.includes('not active')) {
                 setApplyError('Кастинг закрыт')
             } else {
                 setApplyError(err.message || 'Ошибка при отклике')
@@ -76,6 +180,14 @@ export default function CastingDetail() {
         } finally {
             setApplying(false)
         }
+    }
+
+    function handlePurchase(packageData) {
+        // Redirect to purchase flow or handle purchase logic
+        // This would integrate with your payment system
+        console.log('Purchase package:', packageData)
+        // For now, just show a message
+        alert(`Покупка ${packageData.credits} кредитов за ₸${packageData.price} будет доступна скоро`)
     }
 
     if (loading) {
@@ -163,6 +275,26 @@ export default function CastingDetail() {
                             </span>
                         </div>
 
+                        {/* Credits balance indicator */}
+                        <div style={{ 
+                            background: '#f3f4f6', 
+                            padding: '12px', 
+                            borderRadius: '8px', 
+                            marginBottom: '16px',
+                            textAlign: 'center'
+                        }}>
+                            <div style={{ fontSize: '0.75rem', color: '#6b7280', marginBottom: '4px' }}>
+                                Ваш баланс
+                            </div>
+                            <div style={{ 
+                                fontSize: '1.25rem', 
+                                fontWeight: '700', 
+                                color: hasEnoughCredits(CREDIT_COST) ? '#10b981' : '#ef4444' 
+                            }}>
+                                {balance} кредит{balance !== 1 ? 'ов' : ''}
+                            </div>
+                        </div>
+
                         {applied ? (
                             <button className="btn btn-success btn-lg" disabled>
                                 ✓ Вы откликнулись
@@ -171,10 +303,31 @@ export default function CastingDetail() {
                             <button
                                 className="btn btn-primary btn-lg"
                                 onClick={handleApply}
-                                disabled={applying}
+                                disabled={applying || !hasEnoughCredits(CREDIT_COST)}
                             >
-                                {applying ? 'Отправка...' : 'Откликнуться'}
+                                {applying ? (
+                                    <>
+                                        <span className="loading-spinner" style={{ marginRight: '8px' }}></span>
+                                        Отправка...
+                                    </>
+                                ) : (
+                                    `Откликнуться (${CREDIT_COST} кредит)`
+                                )}
                             </button>
+                        )}
+
+                        {successMessage && (
+                            <div style={{
+                                marginTop: '12px',
+                                padding: '10px 12px',
+                                background: '#f0fdf4',
+                                border: '1px solid #86efac',
+                                borderRadius: '8px',
+                                color: '#166534',
+                                fontSize: '0.875rem'
+                            }}>
+                                ✓ {successMessage}
+                            </div>
                         )}
 
                         {applyError && (
@@ -203,6 +356,23 @@ export default function CastingDetail() {
                     planInfo={limitModalData.planInfo}
                 />
             )}
+
+            {/* Apply Confirmation Modal */}
+            <ApplyCreditConfirmModal
+                isOpen={showConfirmModal}
+                onClose={() => setShowConfirmModal(false)}
+                onConfirm={confirmApply}
+                castingTitle={casting?.title || ''}
+                creditCost={CREDIT_COST}
+            />
+
+            {/* Insufficient Credits Modal */}
+            <InsufficientCreditsModal
+                isOpen={showInsufficientModal}
+                onClose={() => setShowInsufficientModal(false)}
+                creditCost={CREDIT_COST}
+                onPurchase={handlePurchase}
+            />
         </div>
     )
 }
