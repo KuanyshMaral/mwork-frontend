@@ -107,6 +107,12 @@ export default function Layout() {
                                 <span>Подписка</span>
                             </Link>
                         </li>
+                        <li className="nav-item">
+                            <Link to="/credits" className={isActive('/credits')}>
+                                <span className="nav-icon">💰</span>
+                                <span>Кредиты</span>
+                            </Link>
+                        </li>
                     </ul>
                 </nav>
 

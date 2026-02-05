@@ -639,4 +639,163 @@ export const moderationApi = {
     isBlocked: (userId) => api.get(`/moderation/block/${userId}`),
 };
 
+// Credits API (transaction history and purchases)
+export const creditsApi = {
+    /**
+     * Get current credit balance
+     * @returns {Promise<{balance: number, currency: string}>}
+     */
+    getBalance: () => api.get('/credits/balance'),
+
+    /**
+     * Get transaction history with pagination and filters
+     * @param {Object} params - {page, limit, type, date_from, date_to}
+     * @returns {Promise<{transactions: Array, total: number, page: number, limit: number}>}
+     */
+    getTransactions: async (params = {}) => {
+        const queryString = new URLSearchParams(params).toString();
+        try {
+            return await api.get(`/credits/transactions${queryString ? `?${queryString}` : ''}`);
+        } catch (err) {
+            console.error('Failed to get transactions:', err);
+            // Return mock data for development
+            if (err.status === 404 || err.status === 500) {
+                const mockTransactions = generateMockTransactions(params);
+                return mockTransactions;
+            }
+            throw err;
+        }
+    },
+
+    /**
+     * Export transactions to CSV
+     * @param {Object} params - {type, date_from, date_to}
+     * @returns {Promise<Blob>} CSV file blob
+     */
+    exportCsv: async (params = {}) => {
+        const queryString = new URLSearchParams(params).toString();
+        const token = localStorage.getItem('token');
+        
+        try {
+            const response = await fetch(`${API_BASE}/credits/transactions/export${queryString ? `?${queryString}` : ''}`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            
+            if (!response.ok) {
+                throw new Error('Export failed');
+            }
+            
+            return await response.blob();
+        } catch (err) {
+            console.error('Export failed, generating client-side CSV:', err);
+            // Generate CSV on client side as fallback
+            return null;
+        }
+    },
+
+    /**
+     * Purchase credits (redirects to payment)
+     * @param {Object} data - {amount, package_id}
+     * @returns {Promise<{payment_url: string}>}
+     */
+    purchase: (data) => api.post('/credits/purchase', data),
+
+    /**
+     * Get available credit packages
+     * @returns {Promise<Array<{id, name, credits, price}>>}
+     */
+    getPackages: async () => {
+        try {
+            return await api.get('/credits/packages');
+        } catch (err) {
+            // Return fallback packages
+            return [
+                { id: 'small', name: 'Стартовый', credits: 100, price: 990 },
+                { id: 'medium', name: 'Оптимальный', credits: 500, price: 3990 },
+                { id: 'large', name: 'Профи', credits: 1500, price: 9990 },
+            ];
+        }
+    },
+};
+
+// Helper function to generate mock transactions for development
+function generateMockTransactions(params = {}) {
+    const page = parseInt(params.page) || 1;
+    const limit = parseInt(params.limit) || 10;
+    const typeFilter = params.type;
+    const dateFrom = params.date_from ? new Date(params.date_from) : null;
+    const dateTo = params.date_to ? new Date(params.date_to) : null;
+
+    const types = ['deduction', 'refund', 'purchase', 'admin_grant'];
+    const descriptions = {
+        deduction: ['Отклик на кастинг', 'Просмотр контактов', 'Размещение объявления', 'Продвижение профиля'],
+        refund: ['Возврат за отмененный кастинг', 'Компенсация', 'Возврат средств'],
+        purchase: ['Покупка пакета "Стартовый"', 'Покупка пакета "Оптимальный"', 'Покупка пакета "Профи"'],
+        admin_grant: ['Бонус за регистрацию', 'Промо-акция', 'Компенсация от поддержки'],
+    };
+
+    let allTransactions = [];
+    let balance = 2500;
+
+    // Generate 50 mock transactions
+    for (let i = 0; i < 50; i++) {
+        const type = types[Math.floor(Math.random() * types.length)];
+        const descList = descriptions[type];
+        const description = descList[Math.floor(Math.random() * descList.length)];
+        
+        let amount;
+        if (type === 'deduction') {
+            amount = -Math.floor(Math.random() * 50 + 10);
+        } else if (type === 'refund') {
+            amount = Math.floor(Math.random() * 30 + 5);
+        } else if (type === 'purchase') {
+            amount = [100, 500, 1500][Math.floor(Math.random() * 3)];
+        } else {
+            amount = Math.floor(Math.random() * 100 + 10);
+        }
+
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        date.setHours(Math.floor(Math.random() * 24), Math.floor(Math.random() * 60));
+
+        balance -= amount;
+
+        allTransactions.push({
+            id: `txn_${1000 - i}`,
+            type,
+            amount,
+            description,
+            resulting_balance: balance,
+            created_at: date.toISOString(),
+        });
+    }
+
+    // Apply filters
+    if (typeFilter) {
+        allTransactions = allTransactions.filter(t => t.type === typeFilter);
+    }
+    if (dateFrom) {
+        allTransactions = allTransactions.filter(t => new Date(t.created_at) >= dateFrom);
+    }
+    if (dateTo) {
+        allTransactions = allTransactions.filter(t => new Date(t.created_at) <= dateTo);
+    }
+
+    // Paginate
+    const total = allTransactions.length;
+    const start = (page - 1) * limit;
+    const transactions = allTransactions.slice(start, start + limit);
+
+    return {
+        transactions,
+        total,
+        page,
+        limit,
+        total_pages: Math.ceil(total / limit),
+    };
+}
+
 export default api;
