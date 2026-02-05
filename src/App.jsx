@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './hooks/useAuth.jsx'
 import { AdminAuthProvider, useAdminAuth } from './hooks/useAdminAuth.jsx'
 import { ChatProvider } from './context/ChatContext.jsx'
 import { NotificationProvider } from './context/NotificationContext.jsx'
+import { CreditsProvider } from './context/CreditsContext.jsx'
 import NotificationToast from './components/notifications/NotificationToast'
 
 // Pages
@@ -122,10 +123,11 @@ function AdminGuard({ children }) {
 
 function AppRoutes() {
     return (
-        <ChatProvider>
-            <NotificationProvider>
-                <NotificationToast />
-                <Routes>
+        <CreditsProvider>
+            <ChatProvider>
+                <NotificationProvider>
+                    <NotificationToast />
+                    <Routes>
                     {/* Public routes */}
                     <Route path="/" element={<Landing />} />
                     <Route path="/login" element={<Login />} />
@@ -251,6 +253,7 @@ function AppRoutes() {
                 </Routes>
             </NotificationProvider>
         </ChatProvider>
+    </CreditsProvider>
     )
 }
 

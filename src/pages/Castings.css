@@ -108,6 +108,50 @@
     color: var(--text-secondary);
 }
 
+/* Error Message */
+.error-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    background: #fee;
+    border: 1px solid #fcc;
+    border-radius: var(--radius-lg);
+    color: #c33;
+}
+
+.error-message h3 {
+    color: #c33;
+    margin-bottom: 12px;
+}
+
+.error-message p {
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.retry-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.retry-btn:hover {
+    background: var(--primary-dark);
+}
+
+/* Demo indicator */
+.demo-indicator {
+    color: #ff6b35;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
 /* Pagination */
 .pagination {
     display: flex;

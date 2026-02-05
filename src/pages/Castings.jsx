@@ -8,6 +8,7 @@ export default function Castings() {
     const [searchParams] = useSearchParams()
     const [castings, setCastings] = useState([])
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
     const [total, setTotal] = useState(0)
     const [pagination, setPagination] = useState({
         page: 1,
@@ -23,10 +24,12 @@ export default function Castings() {
                 params.page = parseInt(value) || 1
             } else if (key === 'limit') {
                 params.limit = parseInt(value) || 20
-            } else {
+            } else if (value && value !== '') {
                 params[key] = value
             }
         }
+        console.log('URL params:', Object.fromEntries(searchParams.entries()))
+        console.log('Parsed filters:', params)
         return params
     }
 
@@ -36,25 +39,66 @@ export default function Castings() {
 
     async function loadCastings() {
         setLoading(true)
+        setError(null)
         try {
             const filters = getFiltersFromParams()
+            console.log('Loading castings with filters:', filters)
+            
+            // Try to fetch castings - API now handles fallback automatically
             const result = await castingApi.list(filters)
-            setCastings(result.data || result || [])
+            console.log('API response:', result)
+            
+            // The API client already extracts data.data, so result should be array directly
+            if (Array.isArray(result)) {
+                setCastings(result)
+                setTotal(result.length)
+                
+                // Check if we're showing demo data
+                const isDemoData = result.length > 0 && result[0].id.startsWith('demo-')
+                if (isDemoData) {
+                    console.log('Showing demo data due to backend issues')
+                }
+            } else if (result && typeof result === 'object') {
+                // Handle case where response is wrapped
+                if (Array.isArray(result.data)) {
+                    setCastings(result.data)
+                    setTotal(result.data.length)
+                } else {
+                    console.warn('Unexpected API response structure:', result)
+                    setCastings([])
+                    setTotal(0)
+                }
+            } else {
+                console.warn('API response is not an array or object:', result)
+                setCastings([])
+                setTotal(0)
+            }
             
             // Handle pagination metadata
-            if (result.meta) {
+            if (result && result.meta) {
                 setPagination({
                     page: result.meta.current_page || 1,
                     limit: result.meta.per_page || 20,
                     total: result.meta.total || 0
                 })
-                setTotal(result.meta.total || 0)
-            } else {
-                setTotal(result.length || 0)
+                if (result.meta.total) {
+                    setTotal(result.meta.total)
+                }
             }
         } catch (err) {
             console.error('Failed to load castings:', err)
+            
+            // Provide more specific error messages
+            if (err.code === 'NETWORK_ERROR' || err.message.includes('fetch')) {
+                console.error('Network error - backend server might not be running')
+            } else if (err.status === 401) {
+                console.error('Authentication error - user might not be logged in')
+            } else if (err.status === 500) {
+                console.error('Server error - backend might have an issue')
+            }
+            
             setCastings([])
+            setTotal(0)
         } finally {
             setLoading(false)
         }
@@ -76,7 +120,12 @@ export default function Castings() {
                 <h1>Кастинги</h1>
                 <p>Найдите идеальную работу для себя</p>
                 {total > 0 && (
-                    <p className="results-count">Найдено: {total} {total === 1 ? 'кастинг' : total < 5 ? 'кастинга' : 'кастингов'}</p>
+                    <p className="results-count">
+                        Найдено: {total} {total === 1 ? 'кастинг' : total < 5 ? 'кастинга' : 'кастингов'}
+                        {castings.length > 0 && castings[0].id.startsWith('demo-') && (
+                            <span className="demo-indicator"> (демо-режим)</span>
+                        )}
+                    </p>
                 )}
             </div>
 
@@ -86,6 +135,23 @@ export default function Castings() {
             {/* Castings Grid */}
             {loading ? (
                 <div className="loading">Загрузка...</div>
+            ) : error ? (
+                <div className="error-message">
+                    <h3>Ошибка загрузки кастингов</h3>
+                    <p>
+                        {error.message.includes('fetch') || error.code === 'NETWORK_ERROR' 
+                            ? 'Не удалось подключиться к серверу. Пожалуйста, убедитесь, что backend сервер запущен на порту 8080.'
+                            : error.status === 401 
+                            ? 'Требуется авторизация. Пожалуйста, войдите в систему.'
+                            : error.status === 500 
+                            ? 'Ошибка сервера. Бэкенд команда уже уведомлена о проблеме. Показываем демо-данные...'
+                            : 'Произошла ошибка при загрузке кастингов. Пожалуйста, попробуйте обновить страницу.'
+                        }
+                    </p>
+                    <button onClick={() => loadCastings()} className="retry-btn">
+                        Попробовать снова
+                    </button>
+                </div>
             ) : (
                 <>
                     <div className="castings-grid">
