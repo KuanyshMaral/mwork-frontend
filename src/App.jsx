@@ -23,6 +23,7 @@ import ProfileEdit from './pages/ProfileEdit'
 import ModelOnboarding from './pages/ModelOnboarding'
 import EmployerOnboarding from './pages/EmployerOnboarding'
 import Subscriptions from './pages/Subscriptions'
+import CreditTransactions from './pages/CreditTransactions'
 import Checkout from './pages/Checkout'
 import Photostudios from './pages/Photostudios'
 import Advertising from './pages/Advertising'
@@ -173,6 +174,8 @@ function AppRoutes() {
                         <Route path="profile/edit" element={<ProfileEdit />} />
                         <Route path="profile/:id" element={<Profile />} />
                         <Route path="subscriptions" element={<Subscriptions />} />
+                        <Route path="credits" element={<CreditTransactions />} />
+                        <Route path="credits/transactions" element={<CreditTransactions />} />
 
                         {/* Settings routes */}
                         <Route path="settings/notifications" element={
