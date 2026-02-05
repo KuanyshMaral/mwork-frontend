@@ -6,6 +6,7 @@ const AuthContext = createContext(null)
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null)
     const [profile, setProfile] = useState(null)
+    const [creditBalance, setCreditBalance] = useState(0)
     const [loading, setLoading] = useState(true)
 
     // Check auth on mount
@@ -22,6 +23,8 @@ export function AuthProvider({ children }) {
         try {
             const userData = await authApi.me()
             setUser(userData)
+            // Set credit balance with fallback to 0 if not provided by backend
+            setCreditBalance(userData.creditBalance ?? 0)
 
             // Also load profile
             try {
@@ -35,6 +38,7 @@ export function AuthProvider({ children }) {
             // Token invalid
             localStorage.removeItem('token')
             localStorage.removeItem('refreshToken')
+            setCreditBalance(0)
         } finally {
             setLoading(false)
         }
@@ -49,6 +53,8 @@ export function AuthProvider({ children }) {
         localStorage.setItem('refreshToken', tokens.refresh_token)
 
         setUser(result.user)
+        // Set credit balance with fallback to 0
+        setCreditBalance(result.user.creditBalance ?? 0)
 
         // Load profile
         try {
@@ -70,6 +76,8 @@ export function AuthProvider({ children }) {
         localStorage.setItem('refreshToken', tokens.refresh_token)
 
         setUser(result.user)
+        // Set credit balance with fallback to 0
+        setCreditBalance(result.user.creditBalance ?? 0)
 
         return result
     }
@@ -87,15 +95,37 @@ export function AuthProvider({ children }) {
         localStorage.removeItem('refreshToken')
         setUser(null)
         setProfile(null)
+        setCreditBalance(0)
     }
 
     function updateProfile(newProfile) {
         setProfile(newProfile)
     }
 
+    // Balance management functions
+    function setBalance(newBalance) {
+        setCreditBalance(newBalance)
+    }
+
+    async function refreshBalance() {
+        try {
+            const userData = await authApi.me()
+            setCreditBalance(userData.creditBalance ?? 0)
+            return userData.creditBalance ?? 0
+        } catch (error) {
+            console.error('Failed to refresh balance:', error)
+            return creditBalance
+        }
+    }
+
+    function applyBalanceDelta(delta) {
+        setCreditBalance(prev => Math.max(0, prev + delta))
+    }
+
     const value = {
         user,
         profile,
+        creditBalance,
         loading,
         isAuthenticated: !!user,
         login,
@@ -103,6 +133,9 @@ export function AuthProvider({ children }) {
         logout,
         updateProfile,
         reloadUser: loadUser,
+        setBalance,
+        refreshBalance,
+        applyBalanceDelta,
     }
 
     return (

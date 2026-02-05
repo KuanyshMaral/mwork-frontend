@@ -1,0 +1,110 @@
+.balance-widget {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.balance-widget:hover {
+    background: #e9ecef;
+    border-color: #dee2e6;
+    transform: translateY(-1px);
+}
+
+.balance-widget.balance-low {
+    background: #fff3cd;
+    border-color: #ffc107;
+    color: #856404;
+}
+
+.balance-widget.balance-low:hover {
+    background: #ffeaa7;
+    border-color: #ffb300;
+}
+
+.balance-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #495057;
+    flex-shrink: 0;
+}
+
+.balance-low .balance-icon {
+    color: #856404;
+}
+
+.balance-amount {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.balance-value {
+    white-space: nowrap;
+}
+
+.balance-warning {
+    display: flex;
+    align-items: center;
+    color: #ffc107;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+    .balance-widget {
+        min-width: 100px;
+        padding: 6px 10px;
+        gap: 6px;
+    }
+    
+    .balance-amount {
+        font-size: 13px;
+    }
+    
+    .balance-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .balance-widget {
+        min-width: 90px;
+        padding: 5px 8px;
+        gap: 5px;
+    }
+    
+    .balance-amount {
+        font-size: 12px;
+    }
+    
+    .balance-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .balance-warning svg {
+        width: 10px;
+        height: 10px;
+    }
+}

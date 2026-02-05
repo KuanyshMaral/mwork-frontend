@@ -1,45 +1,40 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { useAuth } from '../hooks/useAuth.jsx'
 
 const CreditsContext = createContext(null)
 
 export function CreditsProvider({ children }) {
-    const [balance, setBalance] = useState(0)
+    const { creditBalance, setBalance, refreshBalance, applyBalanceDelta } = useAuth()
     const [loading, setLoading] = useState(true)
 
-    // Load credits from localStorage on mount
+    // Initialize with auth balance
     useEffect(() => {
-        const savedBalance = localStorage.getItem('userCredits')
-        if (savedBalance !== null) {
-            setBalance(parseInt(savedBalance, 10))
-        } else {
-            // Set initial balance for testing
-            const initialBalance = 3
-            setBalance(initialBalance)
-            localStorage.setItem('userCredits', initialBalance.toString())
-        }
         setLoading(false)
     }, [])
 
-    // Update balance and save to localStorage
+    // Update balance using auth context
     const updateBalance = (newBalance) => {
-        const balanceNum = parseInt(newBalance, 10)
-        setBalance(balanceNum)
-        localStorage.setItem('userCredits', balanceNum.toString())
+        setBalance(newBalance)
     }
 
     // Add credits
     const addCredits = (amount) => {
-        updateBalance(balance + amount)
+        applyBalanceDelta(amount)
     }
 
     // Deduct credits
     const deductCredits = (amount) => {
-        updateBalance(Math.max(0, balance - amount))
+        applyBalanceDelta(-amount)
+    }
+
+    // Refresh balance from server
+    const refreshCredits = async () => {
+        return await refreshBalance()
     }
 
     // Check if user has enough credits
     const hasEnoughCredits = (required) => {
-        return balance >= required
+        return creditBalance >= required
     }
 
     // Get prevention preference flag
@@ -53,12 +48,13 @@ export function CreditsProvider({ children }) {
     }
 
     const value = {
-        balance,
+        balance: creditBalance,
         loading,
         updateBalance,
         addCredits,
         deductCredits,
         hasEnoughCredits,
+        refreshCredits,
         getPreventionFlag,
         setPreventionFlag,
     }

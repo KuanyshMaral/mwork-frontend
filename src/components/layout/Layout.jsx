@@ -3,6 +3,7 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth.jsx'
 import { useChat } from '../../context/ChatContext.jsx'
 import { useNotifications } from '../../context/NotificationContext.jsx'
+import BalanceWidget from '../balance/BalanceWidget.jsx'
 import './Layout.css'
 
 export default function Layout() {
@@ -56,6 +57,9 @@ export default function Layout() {
                             <span className="plan-label">{user?.role === 'model' ? 'Модель' : 'Работодатель'}</span>
                             <span className="plan-badge">Free</span>
                         </p>
+                        <div className="profile-balance">
+                            <BalanceWidget />
+                        </div>
                     </div>
                 </div>
 

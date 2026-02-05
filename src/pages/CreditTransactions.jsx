@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { creditsApi } from '../api/client'
+import { useAuth } from '../hooks/useAuth.jsx'
+import { formatBalance } from '../utils/balanceFormatter.js'
 import './CreditTransactions.css'
 
 const TRANSACTION_TYPES = {
@@ -11,13 +13,13 @@ const TRANSACTION_TYPES = {
 }
 
 export default function CreditTransactions() {
+    const { creditBalance } = useAuth()
     const [searchParams, setSearchParams] = useSearchParams()
     const navigate = useNavigate()
     
     // State
     const [transactions, setTransactions] = useState([])
     const [loading, setLoading] = useState(true)
-    const [balance, setBalance] = useState(null)
     const [pagination, setPagination] = useState({
         page: 1,
         limit: 10,
@@ -62,21 +64,9 @@ export default function CreditTransactions() {
         }
     }, [currentPage, filters])
 
-    // Load balance
-    const loadBalance = useCallback(async () => {
-        try {
-            const data = await creditsApi.getBalance()
-            setBalance(data.balance)
-        } catch (err) {
-            // Fallback for development
-            setBalance(2500)
-        }
-    }, [])
-
     useEffect(() => {
         loadTransactions()
-        loadBalance()
-    }, [loadTransactions, loadBalance])
+    }, [loadTransactions])
 
     // Update URL when filters change
     const updateUrlParams = (newFilters, newPage = 1) => {
@@ -193,7 +183,7 @@ export default function CreditTransactions() {
                         <div className="balance-widget">
                             <span className="balance-label">Баланс:</span>
                             <span className="balance-value">
-                                {balance !== null ? `${balance.toLocaleString()} кредитов` : '—'}
+                                {formatBalance(creditBalance)}
                             </span>
                         </div>
                         <button className="btn btn-primary buy-credits-btn" onClick={handleBuyCredits}>
