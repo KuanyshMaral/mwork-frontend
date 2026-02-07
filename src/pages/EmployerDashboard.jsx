@@ -84,7 +84,9 @@ export default function EmployerDashboard() {
             active: 'Активный',
             draft: 'Черновик',
             closed: 'Закрыт',
-            paused: 'На паузе'
+            paused: 'На паузе',
+            pending_moderation: 'На модерации',
+            rejected: 'Отклонён'
         }
         return labels[status] || status
     }

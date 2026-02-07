@@ -19,6 +19,7 @@ function AdminLayout() {
         { path: '/admin/moderation', label: 'Модерация', icon: '🔍' },
         { path: '/admin/castings', label: 'Кастинги', icon: '🎬' },
         { path: '/admin/payments', label: 'Платежи', icon: '💳' },
+        { path: '/admin/audit-logs', label: 'Audit Logs', icon: '📜' },
         { path: '/admin/settings', label: 'Настройки', icon: '⚙️' },
     ]
 

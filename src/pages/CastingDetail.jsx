@@ -216,6 +216,9 @@ export default function CastingDetail() {
                         {casting.is_urgent && (
                             <span className="badge badge-warning">Срочно</span>
                         )}
+                        {casting.status === 'closed' && (
+                            <span className="badge badge-danger">Закрыт</span>
+                        )}
 
                         <h1>{casting.title}</h1>
 
@@ -223,6 +226,9 @@ export default function CastingDetail() {
                             <span>📍 {casting.city}</span>
                             <span>👁 {casting.views_count || 0} просмотров</span>
                             <span>📅 {new Date(casting.created_at).toLocaleDateString('ru-RU')}</span>
+                            {casting.status === 'closed' && casting.closed_at && (
+                                <span>🔒 Закрыт: {new Date(casting.closed_at).toLocaleDateString('ru-RU')}</span>
+                            )}
                         </div>
                     </div>
 
@@ -299,6 +305,10 @@ export default function CastingDetail() {
                             <button className="btn btn-success btn-lg" disabled>
                                 ✓ Вы откликнулись
                             </button>
+                        ) : casting.status === 'closed' ? (
+                            <button className="btn btn-secondary btn-lg" disabled>
+                                🔒 Кастинг закрыт
+                            </button>
                         ) : (
                             <button
                                 className="btn btn-primary btn-lg"
@@ -339,6 +349,11 @@ export default function CastingDetail() {
                         {applied && (
                             <p className="apply-note">
                                 Ожидайте ответа от работодателя. После одобрения вы сможете начать чат.
+                            </p>
+                        )}
+                        {casting.status === 'closed' && (
+                            <p className="apply-note">
+                                Этот кастинг закрыт. Закрыт после принятия модели или по решению работодателя.
                             </p>
                         )}
                     </div>

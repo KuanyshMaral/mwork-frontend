@@ -170,6 +170,9 @@ export default function Castings() {
                                     {casting.is_urgent && (
                                         <span className="badge badge-warning">Срочно</span>
                                     )}
+                                    {casting.status === 'closed' && (
+                                        <span className="badge badge-danger">Закрыт</span>
+                                    )}
 
                                     <div className="casting-header">
                                         <h3>{casting.title}</h3>

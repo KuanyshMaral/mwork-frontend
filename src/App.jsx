@@ -57,6 +57,7 @@ const EmployerModeration = lazy(() => import('./pages/admin/EmployerModeration')
 const AdminUsers = lazy(() => import('./pages/admin/Users'))
 const AdminReports = lazy(() => import('./pages/admin/Reports'))
 const AdminFinance = lazy(() => import('./pages/admin/Finance'))
+const AdminAuditLogs = lazy(() => import('./pages/admin/AdminAuditLogs'))
 
 // Agency (lazy loaded)
 const AgencyDashboard = lazy(() => import('./pages/agency/AgencyDashboard'))
@@ -249,6 +250,7 @@ function AppRoutes() {
                         <Route path="users" element={<Suspense fallback={<div className="loading">Загрузка...</div>}><AdminUsers /></Suspense>} />
                         <Route path="reports" element={<Suspense fallback={<div className="loading">Загрузка...</div>}><AdminReports /></Suspense>} />
                         <Route path="finance" element={<Suspense fallback={<div className="loading">Загрузка...</div>}><AdminFinance /></Suspense>} />
+                        <Route path="audit-logs" element={<Suspense fallback={<div className="loading">Загрузка...</div>}><AdminAuditLogs /></Suspense>} />
                     </Route>
 
                     {/* 404 */}

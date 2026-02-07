@@ -14,7 +14,8 @@ export default function CastingFilters() {
         pay_min: '',
         pay_max: '',
         q: '',
-        sort: 'newest'
+        sort: 'newest',
+        status: 'active'
     })
 
     // Initialize filters from URL params
@@ -50,9 +51,10 @@ export default function CastingFilters() {
             pay_min: '',
             pay_max: '',
             q: '',
-            sort: 'newest'
+            sort: 'newest',
+            status: 'active'
         })
-        setSearchParams({})
+        setSearchParams({ status: 'active' })
     }
 
     const hasActiveFilters = Object.entries(filters).some(([key, value]) => 
@@ -164,6 +166,20 @@ export default function CastingFilters() {
                     </div>
                 </div>
 
+                {/* Status */}
+                <div className="filter-group">
+                    <label>Статус</label>
+                    <select
+                        value={filters.status}
+                        onChange={(e) => updateFilter('status', e.target.value)}
+                        className="filter-select"
+                    >
+                        <option value="active">Активные</option>
+                        <option value="all">Все</option>
+                        <option value="closed">Закрытые</option>
+                    </select>
+                </div>
+
                 {/* Sort */}
                 <div className="filter-group">
                     <label>Сортировка</label>
@@ -226,6 +242,12 @@ export default function CastingFilters() {
                             <span className="active-filter-tag">
                                 Поиск: {filters.q}
                                 <button onClick={() => updateFilter('q', '')}>×</button>
+                            </span>
+                        )}
+                        {filters.status && filters.status !== 'active' && (
+                            <span className="active-filter-tag">
+                                Статус: {filters.status === 'all' ? 'Все' : filters.status === 'closed' ? 'Закрытые' : 'Активные'}
+                                <button onClick={() => updateFilter('status', 'active')}>×</button>
                             </span>
                         )}
                     </div>
