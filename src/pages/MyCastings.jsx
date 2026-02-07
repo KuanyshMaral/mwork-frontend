@@ -9,6 +9,7 @@ export default function MyCastings() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
     const [expandedResponses, setExpandedResponses] = useState({})
+    const [chatToast, setChatToast] = useState(null)
 
     useEffect(() => {
         loadCastings()
@@ -44,12 +45,17 @@ export default function MyCastings() {
 
     async function updateResponseStatus(responseId, status, castingId) {
         try {
-            await responseApi.updateStatus(responseId, status)
+            const result = await responseApi.updateStatus(responseId, status)
             const data = await responseApi.getCastingResponses(castingId)
             setExpandedResponses(prev => ({
                 ...prev,
                 [castingId]: Array.isArray(data) ? data : data.responses || []
             }))
+
+            if (status === 'approved' && result?.chat_room_id) {
+                setChatToast({ roomId: result.chat_room_id })
+                setTimeout(() => setChatToast(null), 8000)
+            }
         } catch (err) {
             console.error('Failed to update status:', err)
         }
@@ -81,6 +87,62 @@ export default function MyCastings() {
             </div>
 
             {error && <div className="error-message">{error}</div>}
+
+            {chatToast && (
+                <div style={{
+                    position: 'fixed',
+                    bottom: '24px',
+                    right: '24px',
+                    background: '#10b981',
+                    color: '#fff',
+                    padding: '16px 20px',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+                    zIndex: 1000,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    animation: 'fadeIn 0.3s ease'
+                }}>
+                    <span style={{ fontSize: '1.25rem' }}>💬</span>
+                    <div>
+                        <div style={{ fontWeight: 600, marginBottom: '4px' }}>Чат создан</div>
+                        <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Вы можете написать модели</div>
+                    </div>
+                    <button
+                        onClick={() => {
+                            setChatToast(null)
+                            navigate('/messages')
+                        }}
+                        style={{
+                            background: 'rgba(255,255,255,0.2)',
+                            color: '#fff',
+                            border: '1px solid rgba(255,255,255,0.3)',
+                            padding: '6px 14px',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            fontWeight: 600,
+                            fontSize: '0.85rem',
+                            whiteSpace: 'nowrap'
+                        }}
+                    >
+                        Перейти в чат →
+                    </button>
+                    <button
+                        onClick={() => setChatToast(null)}
+                        style={{
+                            background: 'none',
+                            border: 'none',
+                            color: 'rgba(255,255,255,0.7)',
+                            cursor: 'pointer',
+                            fontSize: '1.1rem',
+                            padding: '0 4px'
+                        }}
+                    >
+                        ✕
+                    </button>
+                </div>
+            )}
 
             <div className="castings-list">
                 {castings.length === 0 ? (

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import PhotoUpload from '../photos/PhotoUpload.jsx';
+import VideoUpload from '../videos/VideoUpload.jsx';
 import './Step4Photos.css';
 
 /**
@@ -121,6 +122,67 @@ export default function Step4Photos({ data, onChange, errors }) {
             {errors.photos && (
                 <div className="error-message">{errors.photos}</div>
             )}
+
+            {/* Video Upload Section */}
+            <div style={{ marginTop: '32px' }}>
+                <h2 className="step-title">Видео</h2>
+                <p className="step-subtitle">
+                    Загрузите видеовизитку или примеры работ. Видео поможет работодателям лучше оценить вашу кандидатуру.
+                </p>
+
+                <div className="videos-grid">
+                    {(Array.isArray(data.videos) ? data.videos : []).map((video, index) => (
+                        <div key={video.id || index} className="video-item" style={{
+                            position: 'relative',
+                            borderRadius: '12px',
+                            overflow: 'hidden',
+                            background: '#000'
+                        }}>
+                            <video
+                                src={video.url}
+                                controls
+                                style={{ width: '100%', maxHeight: '200px', display: 'block' }}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const currentVideos = Array.isArray(data.videos) ? data.videos : [];
+                                    onChange({ videos: currentVideos.filter((_, i) => i !== index) });
+                                }}
+                                style={{
+                                    position: 'absolute',
+                                    top: '8px',
+                                    right: '8px',
+                                    width: '28px',
+                                    height: '28px',
+                                    borderRadius: '50%',
+                                    background: 'rgba(0,0,0,0.6)',
+                                    color: '#fff',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    ))}
+
+                    <VideoUpload
+                        onUploadComplete={(video) => {
+                            const currentVideos = Array.isArray(data.videos) ? data.videos : [];
+                            onChange({ videos: [...currentVideos, video] });
+                        }}
+                    />
+                </div>
+
+                {errors.videos && (
+                    <div className="error-message">{errors.videos}</div>
+                )}
+            </div>
 
             <div className="form-group" style={{ marginTop: '32px' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
