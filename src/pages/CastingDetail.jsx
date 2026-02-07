@@ -42,6 +42,14 @@ export default function CastingDetail() {
     const isUrgentOrClose = casting?.is_urgent || isEventDateClose(casting?.event_date)
     const showGeoWarning = citiesMismatch && isUrgentOrClose && !geoWarningDismissed && !applied
 
+    function getCompetitionLevel(count) {
+        if (count === 0 || count === undefined) return { level: 'low', color: '#10b981', label: 'Низкая' }
+        if (count <= 5) return { level: 'low', color: '#10b981', label: 'Низкая' }
+        if (count <= 15) return { level: 'medium', color: '#f59e0b', label: 'Средняя' }
+        if (count <= 30) return { level: 'high', color: '#ef4444', label: 'Высокая' }
+        return { level: 'very_high', color: '#dc2626', label: 'Очень высокая' }
+    }
+
     useEffect(() => {
         loadCasting()
     }, [id])
@@ -80,6 +88,9 @@ export default function CastingDetail() {
                     views_count: id === 'demo-1' ? 245 :
                                   id === 'demo-2' ? 189 :
                                   156,
+                    responses_count: id === 'demo-1' ? 12 :
+                                     id === 'demo-2' ? 8 :
+                                     23,
                     created_at: id === 'demo-1' ? new Date().toISOString() :
                                  id === 'demo-2' ? new Date(Date.now() - 86400000).toISOString() :
                                  new Date(Date.now() - 172800000).toISOString(),
@@ -127,6 +138,14 @@ export default function CastingDetail() {
         setSuccessMessage(null)
         
         try {
+            // Optimistic update: increment applicant count immediately
+            const currentCount = casting.responses_count || casting.applicants_count || 0
+            setCasting(prev => ({
+                ...prev,
+                responses_count: currentCount + 1,
+                applicants_count: currentCount + 1
+            }))
+            
             // For demo castings, simulate successful application
             if (id.startsWith('demo-')) {
                 console.log('Simulating application for demo casting')
@@ -158,6 +177,14 @@ export default function CastingDetail() {
             
         } catch (err) {
             console.error('Apply error:', err)
+            
+            // Revert optimistic update on error
+            const currentCount = casting.responses_count || casting.applicants_count || 0
+            setCasting(prev => ({
+                ...prev,
+                responses_count: Math.max(0, currentCount - 1),
+                applicants_count: Math.max(0, currentCount - 1)
+            }))
             
             // Handle typed errors
             if (err.type === 'INSUFFICIENT_CREDITS') {
@@ -240,6 +267,12 @@ export default function CastingDetail() {
                         <div className="casting-meta">
                             <span>📍 {casting.city}</span>
                             <span>👁 {casting.views_count || 0} просмотров</span>
+                            <span 
+                                style={{ color: getCompetitionLevel(casting.responses_count || casting.applicants_count || 0).color }}
+                                title={`Конкуренция: ${getCompetitionLevel(casting.responses_count || casting.applicants_count || 0).label}`}
+                            >
+                                🙋‍♀️ {casting.responses_count || casting.applicants_count || 0} {(casting.responses_count || casting.applicants_count || 0) === 1 ? 'отклик' : (casting.responses_count || casting.applicants_count || 0) < 5 ? 'отклика' : 'откликов'}
+                            </span>
                             <span>📅 {new Date(casting.created_at).toLocaleDateString('ru-RU')}</span>
                             {casting.status === 'closed' && casting.closed_at && (
                                 <span>🔒 Закрыт: {new Date(casting.closed_at).toLocaleDateString('ru-RU')}</span>

@@ -48,6 +48,26 @@
     font-size: 0.875rem;
 }
 
+.casting-meta span {
+    transition: var(--transition);
+}
+
+.casting-meta span[title] {
+    cursor: help;
+    font-weight: 600;
+}
+
+.casting-meta span[title]:hover {
+    transform: scale(1.05);
+}
+
+.applicant-counter {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-left: 8px;
+}
+
 /* Description */
 .description-text {
     color: var(--text-secondary);

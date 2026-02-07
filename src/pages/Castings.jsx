@@ -114,6 +114,14 @@ export default function Castings() {
         return 'TFP'
     }
 
+    function getCompetitionLevel(count) {
+        if (count === 0 || count === undefined) return { level: 'low', color: '#10b981', label: 'Низкая' }
+        if (count <= 5) return { level: 'low', color: '#10b981', label: 'Низкая' }
+        if (count <= 15) return { level: 'medium', color: '#f59e0b', label: 'Средняя' }
+        if (count <= 30) return { level: 'high', color: '#ef4444', label: 'Высокая' }
+        return { level: 'very_high', color: '#dc2626', label: 'Очень высокая' }
+    }
+
     return (
         <div className="castings-page animate-fadeIn">
             <div className="page-header">
@@ -199,6 +207,13 @@ export default function Castings() {
                                         )}
                                         <span className="meta-item">
                                             👁 {casting.views_count || 0}
+                                        </span>
+                                        <span 
+                                            className="meta-item applicants-counter"
+                                            style={{ color: getCompetitionLevel(casting.responses_count || casting.applicants_count || 0).color }}
+                                            title={`Конкуренция: ${getCompetitionLevel(casting.responses_count || casting.applicants_count || 0).label}`}
+                                        >
+                                            🙋‍♀️ {casting.responses_count || casting.applicants_count || 0} {(casting.responses_count || casting.applicants_count || 0) === 1 ? 'отклик' : (casting.responses_count || casting.applicants_count || 0) < 5 ? 'отклика' : 'откликов'}
                                         </span>
                                     </div>
 

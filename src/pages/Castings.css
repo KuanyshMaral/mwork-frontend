@@ -87,6 +87,16 @@
     color: var(--text-muted);
 }
 
+.applicants-counter {
+    font-weight: 600;
+    transition: var(--transition);
+    cursor: help;
+}
+
+.applicants-counter:hover {
+    transform: scale(1.05);
+}
+
 .casting-footer {
     display: flex;
     justify-content: space-between;
