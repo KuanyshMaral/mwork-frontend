@@ -64,6 +64,7 @@ const AgencyDashboard = lazy(() => import('./pages/agency/AgencyDashboard'))
 const AgencyProfile = lazy(() => import('./pages/agency/AgencyProfile'))
 const TeamManagement = lazy(() => import('./pages/agency/TeamManagement'))
 const AgencyPublic = lazy(() => import('./pages/AgencyPublic'))
+const AcceptInvite = lazy(() => import('./pages/agency/AcceptInvite'))
 
 // Employer
 const EmployerDashboard = lazy(() => import('./pages/EmployerDashboard'))
@@ -138,6 +139,11 @@ function AppRoutes() {
                     <Route path="/verify-email" element={<ProtectedRoute><VerifyEmail /></ProtectedRoute>} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route path="/agency/invite/:token" element={
+                        <Suspense fallback={<div className="loading">Загрузка...</div>}>
+                            <AcceptInvite />
+                        </Suspense>
+                    } />
                     <Route path="/payment/redirect" element={<PaymentRedirect paymentUrl="https://kaspi.kz/payment/test" amount={4990} />} />
                     <Route path="/payment/success" element={<PaymentSuccess />} />
                     <Route path="/payment/failed" element={<PaymentFailed />} />

@@ -11,7 +11,7 @@ import './CastingDetail.css'
 export default function CastingDetail() {
     const { id } = useParams()
     const navigate = useNavigate()
-    const { user } = useAuth()
+    const { user, profile } = useAuth()
     const { balance, hasEnoughCredits, deductCredits, getPreventionFlag, setPreventionFlag } = useCredits()
 
     const [casting, setCasting] = useState(null)
@@ -24,8 +24,23 @@ export default function CastingDetail() {
     const [showConfirmModal, setShowConfirmModal] = useState(false)
     const [showInsufficientModal, setShowInsufficientModal] = useState(false)
     const [successMessage, setSuccessMessage] = useState(null)
+    const [geoWarningDismissed, setGeoWarningDismissed] = useState(false)
     
     const CREDIT_COST = 1
+
+    const isEventDateClose = (dateStr) => {
+        if (!dateStr) return false
+        const eventDate = new Date(dateStr)
+        const now = new Date()
+        const diffDays = (eventDate - now) / (1000 * 60 * 60 * 24)
+        return diffDays >= 0 && diffDays <= 3
+    }
+
+    const userCity = profile?.city || user?.city || ''
+    const castingCity = casting?.city || ''
+    const citiesMismatch = userCity && castingCity && userCity.toLowerCase() !== castingCity.toLowerCase()
+    const isUrgentOrClose = casting?.is_urgent || isEventDateClose(casting?.event_date)
+    const showGeoWarning = citiesMismatch && isUrgentOrClose && !geoWarningDismissed && !applied
 
     function getCompetitionLevel(count) {
         if (count === 0 || count === undefined) return { level: 'low', color: '#10b981', label: 'Низкая' }
@@ -333,6 +348,56 @@ export default function CastingDetail() {
                                 {balance} кредит{balance !== 1 ? 'ов' : ''}
                             </div>
                         </div>
+
+                        {showGeoWarning && (
+                            <div style={{
+                                padding: '12px 16px',
+                                background: '#fef3c7',
+                                border: '1px solid #f59e0b',
+                                borderRadius: '8px',
+                                marginBottom: '12px',
+                                fontSize: '0.85rem',
+                                color: '#92400e'
+                            }}>
+                                <div style={{ fontWeight: 600, marginBottom: '4px' }}>
+                                    ⚠️ Города не совпадают
+                                </div>
+                                <div>
+                                    Ваш город: <strong>{userCity}</strong>, кастинг: <strong>{castingCity}</strong>.
+                                    {casting.is_urgent && ' Это срочный кастинг.'}
+                                    {' '}Отклик может быть отклонён, если вы не сможете прибыть вовремя.
+                                </div>
+                                <button
+                                    style={{
+                                        marginTop: '8px',
+                                        padding: '4px 12px',
+                                        fontSize: '0.8rem',
+                                        background: '#f59e0b',
+                                        color: '#fff',
+                                        border: 'none',
+                                        borderRadius: '6px',
+                                        cursor: 'pointer'
+                                    }}
+                                    onClick={() => setGeoWarningDismissed(true)}
+                                >
+                                    Понятно, продолжить
+                                </button>
+                            </div>
+                        )}
+
+                        {citiesMismatch && !isUrgentOrClose && !applied && (
+                            <div style={{
+                                padding: '8px 12px',
+                                background: '#f0f9ff',
+                                border: '1px solid #93c5fd',
+                                borderRadius: '8px',
+                                marginBottom: '12px',
+                                fontSize: '0.8rem',
+                                color: '#1e40af'
+                            }}>
+                                ℹ️ Ваш город ({userCity}) отличается от города кастинга ({castingCity}).
+                            </div>
+                        )}
 
                         {applied ? (
                             <button className="btn btn-success btn-lg" disabled>

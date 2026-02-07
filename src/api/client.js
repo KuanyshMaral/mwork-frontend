@@ -277,6 +277,7 @@ export const agencyApi = {
     unfollow: (agencyId) => api.delete(`/agencies/${agencyId}/follow`),
     getFollowers: (agencyId) => api.get(`/agencies/${agencyId}/followers`),
     update: (data) => api.put('/agencies/me', data),
+    acceptInvite: (token) => api.post(`/agencies/invite/${token}/accept`),
 }
 
 // Subscription methods
