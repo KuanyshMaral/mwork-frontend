@@ -209,6 +209,7 @@ export const castingApi = {
                         age_min: 18,
                         age_max: 25,
                         views_count: 245,
+                        responses_count: 12,
                         created_at: new Date().toISOString(),
                         is_urgent: true
                     },
@@ -223,6 +224,7 @@ export const castingApi = {
                         age_min: 16,
                         age_max: 30,
                         views_count: 189,
+                        responses_count: 8,
                         created_at: new Date(Date.now() - 86400000).toISOString(),
                         is_urgent: false
                     },
@@ -237,6 +239,7 @@ export const castingApi = {
                         age_min: 20,
                         age_max: 35,
                         views_count: 156,
+                        responses_count: 23,
                         created_at: new Date(Date.now() - 172800000).toISOString(),
                         is_urgent: false
                     }
